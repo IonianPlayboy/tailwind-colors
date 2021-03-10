@@ -19,27 +19,31 @@
 					>
 				</li>
 				<li class="flex h-16 w-full">
-					<router-link
-						class="flex rounded flex-grow justify-center items-center"
+					<button
+						class="flex font-bold rounded flex-grow justify-center items-center"
 						:style="{ backgroundColor: colors.black }"
-						:to="`/color/${'black'}`"
-						>Black</router-link
+						@click="copyCurrValue(colors.black)"
 					>
+						Black
+					</button>
 				</li>
 				<li class="flex h-16 w-full">
-					<router-link
-						class="flex rounded flex-grow justify-center items-center"
+					<button
+						class="flex font-bold rounded flex-grow justify-center items-center"
 						:style="{
 							backgroundColor: colors.white,
 							color: colorPalette.warmGray[900],
-							textShadow: `2px 2px 6px ${colorPalette.warmGray[300]}`,
+							textShadow: `2px 2px
+						6px ${colorPalette.warmGray[300]}`,
 						}"
-						:to="`/color/${'white'}`"
-						>White</router-link
+						@click="copyCurrValue(colors.white)"
 					>
+						White
+					</button>
 				</li>
 			</ul>
-			<p class="text-2xl mt-6">... Or generate your own custom color</p>
+			<p class="text-2xl mt-6"></p>
+			<!-- <p class="text-2xl mt-6">... Or generate your own custom color</p> -->
 		</section>
 	</main>
 </template>
@@ -49,7 +53,7 @@
 </script>
 <script setup lang="ts">
 import colors from "windicss/colors";
-import { formatColorKey } from "@/utils";
+import { formatColorKey, copyCurrValue } from "@/utils";
 
 const colorPalette = Object.entries(colors)
 	.filter(([key, _value]) => key !== "white" && key !== "black")

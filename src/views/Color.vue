@@ -1,15 +1,13 @@
 <template>
 	<main class="flex flex-col min-h-screen">
 		<section class="w-4/6 m-auto">
-			<h1
-				:style="{ color: colors[currColor][300] }"
-				class="text-5xl font-bold"
-			>
+			<h1 :style="{ color: currShades[300] }" class="text-5xl font-bold">
 				{{ formatColorKey(currColor) }}
 			</h1>
+			<router-link class="mt-3" to="/">&lt; Go back</router-link>
 			<ul
 				v-if="currShades"
-				class="grid grid-cols-3 gap-6 mt-6 text-xl place-items-center"
+				class="grid grid-cols-3 gap-6 mt-3 text-xl place-items-center"
 			>
 				<li
 					v-for="(value, key) in currShades"
@@ -61,32 +59,29 @@
 						>
 					</div>
 				</li>
-				<li
+				<!-- <li
 					class="flex items-center justify-center w-full h-16 col-span-2"
 				>
 					Create your own...
-				</li>
+				</li> -->
 			</ul>
 		</section>
 	</main>
 </template>
 <script lang="ts">
 import { useRoute } from "vue-router";
+import { computed } from "@vue/runtime-core";
 </script>
 <script setup lang="ts">
 import colors from "windicss/colors";
 import { formatColorKey } from "@/utils";
 import { render as CopyIcon } from "@/assets/copySymbol.svg";
-import { useAlerts } from "@/hooks";
-import { computed } from "@vue/runtime-core";
+import { copyCurrValue } from "@/utils";
 
 const currRoute = useRoute();
 ref: currColor = computed(() => currRoute.params.key as keyof typeof colors);
 ref: currShades = computed(
-	() =>
-		(currColor !== "black" && currColor !== "white"
-			? colors[currColor]
-			: null) as null | Record<string | number, string>
+	() => colors[currColor] as Record<string | number, string>
 );
 
 const getCurrHexValue = (key: string) => {
@@ -110,17 +105,5 @@ const getCurrTextShadow = (key: string) => {
 		0 -1px 0 ${Number(key) < 400 ? colors.warmGray[100] : colors.warmGray[900]}AA`;
 	console.log(`${outline}, ${shadow}`);
 	return `${outline}, ${shadow}`;
-};
-const { addAlertToList } = useAlerts();
-const copyCurrValue = async (currValue: string) => {
-	try {
-		navigator.clipboard.writeText(currValue);
-		console.log(`The color ${currValue} was copied !`);
-		addAlertToList({
-			content: `The color ${currValue} was copied !`,
-		});
-	} catch (error) {
-		console.log(error);
-	}
 };
 </script>
