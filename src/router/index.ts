@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/views/Home.vue";
-// const AddParty = () => import("@/views/party/add/index.vue");
+const Color = () => import("@/views/Color.vue");
 
 const routes = [
 	{ path: "/", component: Home },
-	// { path: "/party/add", component: AddParty },
+	{ path: "/color/:key", component: Color },
 ];
 
 const router = createRouter({

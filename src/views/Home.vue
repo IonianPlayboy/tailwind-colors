@@ -15,7 +15,7 @@
 						class="flex rounded flex-grow justify-center items-center"
 						:style="{ backgroundColor: colorPalette[key][700] }"
 						:to="`/color/${key}`"
-						>{{ formatCurrText(key) }}</router-link
+						>{{ formatColorKey(key) }}</router-link
 					>
 				</li>
 				<li class="flex h-16 w-full">
@@ -49,16 +49,12 @@
 </script>
 <script setup lang="ts">
 import colors from "windicss/colors";
-// console.log(colors);
+import { formatColorKey } from "@/utils";
+
 const colorPalette = Object.entries(colors)
 	.filter(([key, _value]) => key !== "white" && key !== "black")
 	.reduce(
 		(result, [key, value]) => ({ ...result, [key]: value }),
 		{} as Omit<typeof colors, "white" | "black">
 	);
-const getCurrColor = (key: keyof typeof colorPalette) => colors[key][700];
-const formatCurrText = (key: keyof typeof colorPalette) =>
-	key
-		.replaceAll(/([A-Z])/g, " $1")
-		.replace(/^./, (match) => match.toUpperCase());
 </script>
