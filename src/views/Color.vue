@@ -14,8 +14,28 @@
 				<li
 					v-for="(value, key) in currShades"
 					:key="`${currColor}${key}`"
-					class="flex w-full h-36"
+					class="relative flex w-full h-36"
 				>
+					<button
+						class="absolute w-6 h-6 top-4 left-4"
+						title="Copy the current color hexcode"
+						@click="copyCurrValue(value)"
+					>
+						<copy-icon
+							class="fill-current stroke-12"
+							:class="{
+								'text-warm-gray-200': Number(key) >= 400,
+								'text-warm-gray-700': Number(key) < 400,
+							}"
+							:style="{
+								stroke:
+									Number(key) < 400
+										? colors.warmGray[100]
+										: colors.warmGray[900],
+								filter: getCurrBoxShadow(key),
+							}"
+						/>
+					</button>
 					<div
 						class="flex flex-col items-center justify-center flex-grow space-y-1 border rounded shadow-lg border-warm-gray-700"
 						:style="{
@@ -24,12 +44,21 @@
 						}"
 					>
 						<strong
-							class="text-3xl font-bold text-warm-gray-50 font-display"
+							class="text-3xl font-bold font-display"
+							:class="{
+								'text-warm-gray-50': Number(key) >= 400,
+								'text-warm-gray-800': Number(key) < 400,
+							}"
 							>{{ key }}</strong
 						>
-						<span class="text-2xl text-warm-gray-200">{{
-							value
-						}}</span>
+						<span
+							class="text-2xl"
+							:class="{
+								'text-warm-gray-200': Number(key) >= 400,
+								'text-warm-gray-700': Number(key) < 400,
+							}"
+							>{{ value }}</span
+						>
 					</div>
 				</li>
 				<li
@@ -47,6 +76,8 @@ import { useRoute } from "vue-router";
 <script setup lang="ts">
 import colors from "windicss/colors";
 import { formatColorKey } from "@/utils";
+import { render as CopyIcon } from "@/assets/copySymbol.svg";
+import { useAlerts } from "@/hooks";
 import { computed } from "@vue/runtime-core";
 
 const currRoute = useRoute();
@@ -58,16 +89,38 @@ ref: currShades = computed(
 			: null) as null | Record<string | number, string>
 );
 
+const getCurrHexValue = (key: string) => {
+	const hexValue = Math.round((Number(key) / 900) * 255).toString(16);
+	return hexValue.length === 1 ? "0" + hexValue : hexValue;
+};
+
+const getCurrBoxShadow = (key: string) => {
+	return `drop-shadow(2px 2px 6px ${colors.warmGray[900]}${getCurrHexValue(
+		key
+	)})`;
+};
+
 const getCurrTextShadow = (key: string) => {
-	const currHexValue = Math.round((Number(key) / 900) * 255).toString(16);
-	const shadow = `2px 2px 6px ${colors.warmGray[900]}${
-		currHexValue.length === 1 ? "0" + currHexValue : currHexValue
-	}`;
-	const outline = `1px 0 0 ${colors.warmGray[900]}AA,
-		0 1px 0 ${colors.warmGray[900]}AA,
-		-1px 0 0 ${colors.warmGray[900]}AA,
-		0 -1px 0 ${colors.warmGray[900]}AA`;
+	const shadow = `2px 2px 6px ${colors.warmGray[900]}${getCurrHexValue(key)}`;
+	const outline = `1px 0 0 ${
+		Number(key) < 400 ? colors.warmGray[100] : colors.warmGray[900]
+	}AA,
+		0 1px 0 ${Number(key) < 400 ? colors.warmGray[100] : colors.warmGray[900]}AA,
+		-1px 0 0 ${Number(key) < 400 ? colors.warmGray[100] : colors.warmGray[900]}AA,
+		0 -1px 0 ${Number(key) < 400 ? colors.warmGray[100] : colors.warmGray[900]}AA`;
 	console.log(`${outline}, ${shadow}`);
 	return `${outline}, ${shadow}`;
+};
+const { addAlertToList } = useAlerts();
+const copyCurrValue = async (currValue: string) => {
+	try {
+		navigator.clipboard.writeText(currValue);
+		console.log(`The color ${currValue} was copied !`);
+		addAlertToList({
+			content: `The color ${currValue} was copied !`,
+		});
+	} catch (error) {
+		console.log(error);
+	}
 };
 </script>
