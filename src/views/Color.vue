@@ -51,6 +51,9 @@
 					>
 				</div>
 			</template>
+			<template #last>
+				<custom-color v-bind="{ currColor, currShades }" />
+			</template>
 		</color-list>
 	</layout>
 </template>
@@ -62,6 +65,7 @@ import { computed } from "@vue/runtime-core";
 import Layout from "@/components/atoms/Layout.vue";
 import MainTitle from "@/components/atoms/MainTitle.vue";
 import ColorList from "@/components/molecules/ColorList.vue";
+import CustomColor from "@/components/CustomColor.vue";
 import colors from "windicss/colors";
 import { formatColorKey } from "@/utils";
 import { render as CopyIcon } from "@/assets/copySymbol.svg";
@@ -95,3 +99,8 @@ const getCurrTextShadow = (key: string) => {
 	return `${outline}, ${shadow}`;
 };
 </script>
+<style scoped>
+button {
+	text-shadow: inherit;
+}
+</style>

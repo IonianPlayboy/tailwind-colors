@@ -22,6 +22,11 @@
 				<slot name="basic" :currValue="value" :currKey="key" />
 			</list-item>
 		</template>
+		<template v-if="slots.last">
+			<list-item class="items-center justify-center">
+				<slot name="last" />
+			</list-item>
+		</template>
 	</ul>
 </template>
 
