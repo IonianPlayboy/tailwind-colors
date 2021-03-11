@@ -1,78 +1,67 @@
 <template>
-	<main class="flex flex-col min-h-screen">
-		<section class="w-4/6 m-auto">
-			<h1 :style="{ color: currShades[300] }" class="text-5xl font-bold">
-				{{ formatColorKey(currColor) }}
-			</h1>
-			<router-link class="mt-3" to="/">&lt; Go back</router-link>
-			<ul
-				v-if="currShades"
-				class="grid grid-cols-3 gap-6 mt-3 text-xl place-items-center"
-			>
-				<li
-					v-for="(value, key) in currShades"
-					:key="`${currColor}${key}`"
-					class="relative flex w-full h-36"
+	<layout>
+		<main-title :style="{ color: currShades[300] }">
+			{{ formatColorKey(currColor) }}</main-title
+		>
+		<router-link class="mt-3" to="/">&lt; Go back</router-link>
+		<color-list wide :colors-list="currShades">
+			<template #default="{ currKey, currValue }">
+				<button
+					class="absolute w-6 h-6 top-4 left-4"
+					title="Copy the current color hexcode"
+					@click="copyCurrValue(currValue)"
 				>
-					<button
-						class="absolute w-6 h-6 top-4 left-4"
-						title="Copy the current color hexcode"
-						@click="copyCurrValue(value)"
-					>
-						<copy-icon
-							class="fill-current stroke-12"
-							:class="{
-								'text-warm-gray-200': Number(key) >= 400,
-								'text-warm-gray-700': Number(key) < 400,
-							}"
-							:style="{
-								stroke:
-									Number(key) < 400
-										? colors.warmGray[100]
-										: colors.warmGray[900],
-								filter: getCurrBoxShadow(key),
-							}"
-						/>
-					</button>
-					<div
-						class="flex flex-col items-center justify-center flex-grow space-y-1 border rounded shadow-lg border-warm-gray-700"
-						:style="{
-							backgroundColor: value,
-							textShadow: getCurrTextShadow(key),
+					<copy-icon
+						class="fill-current stroke-12"
+						:class="{
+							'text-warm-gray-200': Number(currKey) >= 400,
+							'text-warm-gray-700': Number(currKey) < 400,
 						}"
-					>
-						<strong
-							class="text-3xl font-bold font-display"
-							:class="{
-								'text-warm-gray-50': Number(key) >= 400,
-								'text-warm-gray-800': Number(key) < 400,
-							}"
-							>{{ key }}</strong
-						>
-						<span
-							class="text-2xl"
-							:class="{
-								'text-warm-gray-200': Number(key) >= 400,
-								'text-warm-gray-700': Number(key) < 400,
-							}"
-							>{{ value }}</span
-						>
-					</div>
-				</li>
-				<!-- <li
-					class="flex items-center justify-center w-full h-16 col-span-2"
+						:style="{
+							stroke:
+								Number(currKey) < 400
+									? colors.warmGray[100]
+									: colors.warmGray[900],
+							filter: getCurrBoxShadow(currKey),
+						}"
+					/>
+				</button>
+				<div
+					class="flex flex-col items-center justify-center flex-grow space-y-1 border rounded shadow-lg border-warm-gray-700"
+					:style="{
+						backgroundColor: currValue,
+						textShadow: getCurrTextShadow(currKey),
+					}"
 				>
-					Create your own...
-				</li> -->
-			</ul>
-		</section>
-	</main>
+					<strong
+						class="text-3xl font-bold font-display"
+						:class="{
+							'text-warm-gray-50': Number(currKey) >= 400,
+							'text-warm-gray-800': Number(currKey) < 400,
+						}"
+						>{{ currKey }}</strong
+					>
+					<span
+						class="text-2xl"
+						:class="{
+							'text-warm-gray-200': Number(currKey) >= 400,
+							'text-warm-gray-700': Number(currKey) < 400,
+						}"
+						>{{ currValue }}</span
+					>
+				</div>
+			</template>
+		</color-list>
+	</layout>
 </template>
 <script lang="ts">
 import { useRoute } from "vue-router";
 import { computed } from "@vue/runtime-core";
 </script>
 <script setup lang="ts">
+import Layout from "@/components/atoms/Layout.vue";
+import MainTitle from "@/components/atoms/MainTitle.vue";
+import ColorList from "@/components/molecules/ColorList.vue";
 import colors from "windicss/colors";
 import { formatColorKey } from "@/utils";
 import { render as CopyIcon } from "@/assets/copySymbol.svg";
