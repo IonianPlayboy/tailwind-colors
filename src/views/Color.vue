@@ -103,7 +103,6 @@ const getCurrTextShadow = (key: string) => {
 		0 1px 0 ${Number(key) < 400 ? colors.warmGray[100] : colors.warmGray[900]}AA,
 		-1px 0 0 ${Number(key) < 400 ? colors.warmGray[100] : colors.warmGray[900]}AA,
 		0 -1px 0 ${Number(key) < 400 ? colors.warmGray[100] : colors.warmGray[900]}AA`;
-	console.log(`${outline}, ${shadow}`);
 	return `${outline}, ${shadow}`;
 };
 </script>
