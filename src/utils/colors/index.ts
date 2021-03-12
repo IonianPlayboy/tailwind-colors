@@ -52,3 +52,8 @@ export const findClosestShade = (
 			? Number(key)
 			: result;
 	}, 0);
+
+export const getCurrHexValue = (shadeNumber: number): string => {
+	const hexValue = Math.round((shadeNumber / 900) * 255);
+	return formatHexValue(hexValue);
+};

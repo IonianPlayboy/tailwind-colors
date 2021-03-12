@@ -2,7 +2,7 @@
 	<layout>
 		<main-title> Welcome to Tailwind Colors ! </main-title>
 		<p class="text-2xl mt-8">Browse the base palette colors :</p>
-		<color-list
+		<colors-list
 			small-items
 			:colors-list="colorPalette"
 			:basic-colors="basicColors"
@@ -27,7 +27,7 @@
 					{{ formatColorKey(currKey) }}
 				</button>
 			</template>
-		</color-list>
+		</colors-list>
 		<p class="text-2xl mt-6"></p>
 		<!-- <p class="text-2xl mt-6">... Or generate your own custom color</p> -->
 	</layout>
@@ -39,7 +39,7 @@ import colors from "windicss/colors";
 <script setup lang="ts">
 import Layout from "@/components/atoms/Layout.vue";
 import MainTitle from "@/components/atoms/MainTitle.vue";
-import ColorList from "@/components/molecules/ColorList.vue";
+import ColorsList from "@/components/molecules/ColorsList.vue";
 import { formatColorKey, copyCurrValue } from "@/utils";
 
 const colorPalette = Object.entries(colors)

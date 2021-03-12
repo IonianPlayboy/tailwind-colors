@@ -25,38 +25,22 @@
 			Validate
 		</button>
 	</section>
-	<section
+	<color-item
 		v-if="state === 'done'"
-		class="flex flex-col items-center justify-center flex-grow h-full space-y-1 border rounded shadow-lg border-warm-gray-700"
-		:style="{
-			backgroundColor: `${customColor ?? 'initial'}`,
-		}"
-	>
-		<strong
-			class="text-3xl font-bold font-display"
-			:class="{
-				'text-warm-gray-50': currInput >= 400,
-				'text-warm-gray-800': currInput < 400,
-			}"
-			>{{ currInput }}</strong
-		>
-		<span
-			class="text-2xl"
-			:class="{
-				'text-warm-gray-200': currInput >= 400,
-				'text-warm-gray-700': currInput < 400,
-			}"
-			>{{ customColor }}</span
-		>
-		<button @click="state = 'choosing'">Edit</button>
-	</section>
+		editable
+		:hex-code="customColor"
+		:shade-number="currInput"
+		@colorEdited="state = 'choosing'"
+	/>
 </template>
 
 <script lang="ts">
-import { adjustColor, findClosestShade } from "@/utils/colors";
+import { adjustColor, findClosestShade } from "@/utils";
 import { defineProps, watchEffect } from "@vue/runtime-core";
 </script>
 <script setup lang="ts">
+import ColorItem from "@/components/organisms/ColorItem.vue";
+
 const props = defineProps<{
 	currColor: string;
 	currShades: Record<string | number, string>;
@@ -69,9 +53,9 @@ watchEffect(() => {
 	if (!currInput) return;
 	const foundShade = props.currShades[currInput];
 	if (foundShade) return (customColor = foundShade);
-	const closestShade = findClosestShade(Number(currInput), props.currShades);
+	const closestShade = findClosestShade(currInput, props.currShades);
 	const nearestShade = findClosestShade(
-		Number(currInput),
+		currInput,
 		props.currShades,
 		closestShade
 	);

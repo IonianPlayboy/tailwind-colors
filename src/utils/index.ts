@@ -17,3 +17,4 @@ export const copyCurrValue = async (currValue: string): Promise<void> => {
 		console.log(error);
 	}
 };
+export * from "./colors";

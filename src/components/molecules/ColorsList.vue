@@ -42,5 +42,4 @@ const props = defineProps<{
 	wide?: boolean;
 }>();
 const { slots } = useContext();
-console.log(slots);
 </script>
