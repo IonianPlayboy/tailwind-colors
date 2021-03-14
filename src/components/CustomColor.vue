@@ -11,19 +11,19 @@
 		:style="{
 			backgroundColor: `${customColor ?? 'initial'}`,
 		}"
-		class="flex items-center justify-center w-full h-full space-x-8 font-bold transition-colors duration-300 ease-out border rounded shadow-lg bg-warm-gray-600 border-warm-gray-700"
+		class="flex items-center justify-center w-full h-full space-x-1.5 sm:space-x-3 md:space-x-8 font-bold transition-colors duration-300 ease-out border rounded shadow-lg bg-warm-gray-600 border-warm-gray-700"
 	>
 		<input
 			v-model.number="currInput"
-			class="text-lg font-bold rounded shadow-md border-warm-gray-800 w-8ch bg-warm-gray-700"
+			class="md:text-lg sm:text-base text-sm font-bold rounded shadow-md border-warm-gray-800 box-content w-3ch bg-warm-gray-700"
 			type="number"
 		/>
-		<button
-			class="px-3 py-2 font-bold border rounded shadow-md bg-cool-gray-700 border-cool-gray-800"
-			@click="state = 'done'"
-		>
-			Validate
-		</button>
+		<validate-button
+			:hex-code="customColor"
+			:shade-number="currInput"
+			class="relative"
+			@buttonClicked="state = 'done'"
+		/>
 	</section>
 	<color-item
 		v-if="state === 'done'"
@@ -39,6 +39,7 @@ import { adjustColor, findClosestShade } from "@/utils";
 import { defineProps, watchEffect } from "@vue/runtime-core";
 </script>
 <script setup lang="ts">
+import ValidateButton from "@/components/molecules/ValidateButton.vue";
 import ColorItem from "@/components/organisms/ColorItem.vue";
 
 const props = defineProps<{
@@ -66,4 +67,8 @@ watchEffect(() => {
 	);
 });
 </script>
-<style scoped></style>
+<style scoped>
+input[type="number"] {
+	-moz-appearance: textfield; /* Firefox */
+}
+</style>

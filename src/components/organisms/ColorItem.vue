@@ -1,10 +1,13 @@
 <template>
-	<copy-button class="top-4 left-4" v-bind="{ hexCode, shadeNumber }" />
+	<copy-button
+		class="top-2 absolute left-2 sm:top-3 sm:left-3 md:top-4 md:left-4"
+		v-bind="{ hexCode, shadeNumber }"
+	/>
 	<color-display v-bind="{ hexCode, shadeNumber }" />
 	<edit-button
 		v-if="editable"
 		v-bind="{ hexCode, shadeNumber }"
-		class="top-4 right-4"
+		class="top-2 absolute right-2 sm:top-3 sm:right-3 md:top-4 md:right-4"
 		@buttonClicked="$emit('colorEdited')"
 	/>
 </template>

@@ -2,9 +2,9 @@
 	<ul
 		:class="{
 			'grid-cols-3': wide,
-			'grid-cols-6': !wide,
+			'md:grid-cols-6 grid-cols-4': !wide,
 		}"
-		class="grid gap-6 mt-6 text-xl font-bold font-display place-items-center"
+		class="grid gap-6 mt-6 text-base sm:text-lg lg:text-xl font-bold font-display place-items-center"
 	>
 		<list-item
 			v-for="(value, key) in colorsList"

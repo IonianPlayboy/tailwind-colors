@@ -1,7 +1,9 @@
 <template>
 	<layout>
 		<main-title> Welcome to Tailwind Colors ! </main-title>
-		<p class="text-2xl mt-8">Browse the base palette colors :</p>
+		<p class="text-xl text-warm-gray-300 md:text-2xl mt-8">
+			Browse the base palette colors :
+		</p>
 		<colors-list
 			small-items
 			:colors-list="colorPalette"
@@ -9,7 +11,7 @@
 		>
 			<template #default="{ currKey, currValue }">
 				<router-link
-					class="flex rounded flex-grow justify-center items-center"
+					class="flex rounded shadow-lg flex-grow justify-center items-center"
 					:style="{ backgroundColor: currValue[700] }"
 					:to="`/color/${currKey}`"
 					>{{ formatColorKey(currKey) }}</router-link

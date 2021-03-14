@@ -1,16 +1,22 @@
 <template>
 	<button
-		class="absolute w-7 h-7"
+		class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7"
+		:class="{
+			'w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9': big,
+			'w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7': !big,
+		}"
 		:title="currTitle"
 		@click="$emit('buttonClicked')"
 	>
 		<component
 			:is="currIconComponent"
 			v-if="currIconComponent"
-			class="w-full h-full fill-current stroke-12"
+			class="w-full h-full fill-current"
 			:class="{
 				'text-warm-gray-200': shadeNumber >= 400,
 				'text-warm-gray-700': shadeNumber < 400,
+				'stroke-12': !thinBorder,
+				'stroke-4': thinBorder,
 			}"
 			:style="{
 				stroke:
@@ -43,6 +49,8 @@ const props = defineProps<{
 	currIcon: string;
 	hexCode: string;
 	shadeNumber: number;
+	thinBorder?: boolean;
+	big?: boolean;
 }>();
 
 const currIconComponent = computed(() => iconsComponents[props.currIcon]);

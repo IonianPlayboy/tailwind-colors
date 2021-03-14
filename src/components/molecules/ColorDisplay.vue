@@ -7,7 +7,7 @@
 		}"
 	>
 		<strong
-			class="text-3xl font-bold font-display"
+			class="md:text-3xl sm:text-2xl text-xl font-bold font-display"
 			:class="{
 				'text-warm-gray-50': shadeNumber >= 400,
 				'text-warm-gray-800': shadeNumber < 400,
@@ -16,7 +16,7 @@
 			{{ shadeNumber }}
 		</strong>
 		<span
-			class="text-2xl"
+			class="md:text-2xl sm:text-xl text-base"
 			:class="{
 				'text-warm-gray-200': shadeNumber >= 400,
 				'text-warm-gray-700': shadeNumber < 400,
