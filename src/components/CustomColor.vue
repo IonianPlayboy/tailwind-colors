@@ -17,6 +17,8 @@
 			v-model.number="currInput"
 			class="md:text-lg sm:text-base text-sm font-bold rounded shadow-md border-warm-gray-800 box-content w-3ch bg-warm-gray-700"
 			type="number"
+			pattern="[0-9]*"
+			inputmode="numeric"
 		/>
 		<validate-button
 			:hex-code="customColor"
@@ -69,6 +71,11 @@ watchEffect(() => {
 </script>
 <style scoped>
 input[type="number"] {
-	-moz-appearance: textfield; /* Firefox */
+	-moz-appearance: textfield;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
 }
 </style>
