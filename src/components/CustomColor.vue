@@ -32,7 +32,6 @@ import { adjustColor, findClosestShade } from "@/utils";
 import { defineEmit, defineProps, watchEffect } from "@vue/runtime-core";
 </script>
 <script setup lang="ts">
-// import ValidateButton from "@/components/molecules/ValidateButton.vue";
 import ColorInput from "@/components/molecules/ColorInput.vue";
 import ColorItem from "@/components/organisms/ColorItem.vue";
 
