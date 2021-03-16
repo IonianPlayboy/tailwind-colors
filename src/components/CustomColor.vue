@@ -18,13 +18,6 @@
 		:shade-number="shadeNumber ?? 0"
 		@buttonClicked="colorWasValidated()"
 	/>
-	<color-item
-		v-if="state === 'done'"
-		editable
-		:hex-code="customColor"
-		:shade-number="shadeNumber"
-		@colorEdited="state = 'choosing'"
-	/>
 </template>
 
 <script lang="ts">
@@ -33,14 +26,13 @@ import { defineEmit, defineProps, watchEffect } from "@vue/runtime-core";
 </script>
 <script setup lang="ts">
 import ColorInput from "@/components/molecules/ColorInput.vue";
-import ColorItem from "@/components/organisms/ColorItem.vue";
 
 const props = defineProps<{
 	currColor: string;
 	currShades: Record<string | number, string>;
 	small?: boolean;
 }>();
-ref: state = "inactive" as "inactive" | "choosing" | "done";
+ref: state = "inactive" as "inactive" | "choosing";
 ref: currInput = "";
 ref: shadeNumber = null as null | number;
 ref: customColor = null as null | string;

@@ -16,10 +16,12 @@
 				/>
 			</template>
 			<template #custom="{ currKey, currValue }">
-				<color-item
-					editable
+				<editable-color
+					:color-name="currColor"
 					:hex-code="currValue"
 					:shade-number="Number(currKey)"
+					:curr-shades="currShades"
+					@colorValidated="editShadeFromColor($event)"
 				/>
 			</template>
 			<template #last>
@@ -43,28 +45,21 @@ import Layout from "@/components/atoms/Layout.vue";
 import MainTitle from "@/components/atoms/MainTitle.vue";
 import ColorsList from "@/components/molecules/ColorsList.vue";
 import ColorItem from "@/components/organisms/ColorItem.vue";
+import EditableColor from "@/components/organisms/EditableColor.vue";
 import CustomColor from "@/components/CustomColor.vue";
 import colors from "windicss/colors";
 import { formatColorKey } from "@/utils";
+import { useCustomColors } from "@/hooks";
 
 const currRoute = useRoute();
 ref: currColor = computed(() => currRoute.params.key as keyof typeof colors);
 ref: currShades = computed(
 	() => colors[currColor] as Record<string | number, string>
 );
-ref: customShades = {} as Record<string, string>;
 
-const addCustomShade = ({
-	colorName,
-	shadeNumber,
-	hexCode,
-}: {
-	colorName: string;
-	shadeNumber: number;
-	hexCode: string;
-}) => {
-	customShades[shadeNumber] = hexCode;
-};
+const { customColors, addCustomShade, editShadeFromColor } = useCustomColors();
+
+ref: customShades = computed(() => customColors.value[currColor]);
 </script>
 <style scoped>
 button {
