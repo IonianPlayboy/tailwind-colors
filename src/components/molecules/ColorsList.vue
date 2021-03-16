@@ -22,6 +22,15 @@
 				<slot name="basic" :currValue="value" :currKey="key" />
 			</list-item>
 		</template>
+		<template v-if="customColors">
+			<list-item
+				v-for="(value, key) in customColors"
+				:key="`custom${key}`"
+				:small="smallItems"
+			>
+				<slot name="custom" :currValue="value" :currKey="key" />
+			</list-item>
+		</template>
 		<template v-if="slots.last">
 			<list-item class="items-center justify-center">
 				<slot name="last" />
@@ -37,6 +46,7 @@ import { defineProps, useContext } from "@vue/runtime-core";
 import ListItem from "@/components/atoms/ListItem.vue";
 const props = defineProps<{
 	colorsList: Record<string, string | Record<number | string, string>>;
+	customColors?: Record<string, string>;
 	basicColors?: Record<string, string>;
 	smallItems?: boolean;
 	wide?: boolean;

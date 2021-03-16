@@ -1,75 +1,91 @@
 <template>
 	<button
 		v-if="state === 'inactive'"
-		class="w-full h-full font-bold border rounded shadow-lg bg-warm-gray-600 border-warm-gray-700"
+		class="font-bold border rounded shadow-lg"
+		:class="{
+			'w-full h-full bg-warm-gray-600 border-warm-gray-700': small,
+			'text-xl md:text-2xl': !small,
+		}"
 		@click="state = 'choosing'"
 	>
-		Create your own...
+		<slot />
 	</button>
-	<section
+	<color-input
 		v-if="state === 'choosing'"
-		:style="{
-			backgroundColor: `${customColor ?? 'initial'}`,
-		}"
-		class="flex items-center justify-center w-full h-full space-x-1.5 sm:space-x-3 md:space-x-8 font-bold transition-colors duration-300 ease-out border rounded shadow-lg bg-warm-gray-600 border-warm-gray-700"
-	>
-		<input
-			v-model.number="currInput"
-			class="md:text-lg sm:text-base text-sm font-bold rounded shadow-md border-warm-gray-800 box-content w-3ch bg-warm-gray-700"
-			type="number"
-			pattern="[0-9]*"
-			inputmode="numeric"
-		/>
-		<validate-button
-			:hex-code="customColor"
-			:shade-number="currInput"
-			class="relative"
-			@buttonClicked="state = 'done'"
-		/>
-	</section>
+		v-model="currInput"
+		type="number"
+		:custom-color="customColor ?? ''"
+		:shade-number="shadeNumber ?? 0"
+		@buttonClicked="colorWasValidated()"
+	/>
 	<color-item
 		v-if="state === 'done'"
 		editable
 		:hex-code="customColor"
-		:shade-number="currInput"
+		:shade-number="shadeNumber"
 		@colorEdited="state = 'choosing'"
 	/>
 </template>
 
 <script lang="ts">
 import { adjustColor, findClosestShade } from "@/utils";
-import { defineProps, watchEffect } from "@vue/runtime-core";
+import { defineEmit, defineProps, watchEffect } from "@vue/runtime-core";
 </script>
 <script setup lang="ts">
-import ValidateButton from "@/components/molecules/ValidateButton.vue";
+// import ValidateButton from "@/components/molecules/ValidateButton.vue";
+import ColorInput from "@/components/molecules/ColorInput.vue";
 import ColorItem from "@/components/organisms/ColorItem.vue";
 
 const props = defineProps<{
 	currColor: string;
 	currShades: Record<string | number, string>;
+	small?: boolean;
 }>();
 ref: state = "inactive" as "inactive" | "choosing" | "done";
-ref: currInput = null as null | number;
+ref: currInput = "";
+ref: shadeNumber = null as null | number;
 ref: customColor = null as null | string;
 
 watchEffect(() => {
-	if (!currInput) return;
-	const foundShade = props.currShades[currInput];
+	if (!Number(currInput)) return;
+	shadeNumber = Number(currInput);
+	const foundShade = props.currShades[shadeNumber];
 	if (foundShade) return (customColor = foundShade);
-	const closestShade = findClosestShade(currInput, props.currShades);
+	const closestShade = findClosestShade(shadeNumber, props.currShades);
 	const nearestShade = findClosestShade(
-		currInput,
+		shadeNumber,
 		props.currShades,
 		closestShade
 	);
 	customColor = adjustColor(
 		props.currShades[closestShade],
 		props.currShades[nearestShade],
-		closestShade - currInput
+		closestShade - shadeNumber
 	);
 });
+
+const emit = defineEmit<
+	(event: "colorValidated", payload: Record<string, number | string>) => void
+>();
+
+const colorWasValidated = () => {
+	if (!currInput || !customColor) return;
+	emit("colorValidated", {
+		colorName: props.currColor,
+		shadeNumber: shadeNumber as number,
+		hexCode: customColor,
+	});
+	currInput = "";
+	shadeNumber = null;
+	customColor = null;
+	state = "inactive";
+};
 </script>
 <style scoped>
+button {
+	text-shadow: inherit;
+}
+
 input[type="number"] {
 	-moz-appearance: textfield;
 }
