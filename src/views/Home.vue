@@ -1,7 +1,7 @@
 <template>
 	<layout>
 		<main-title> Welcome to Tailwind Colors ! </main-title>
-		<h2 class="mt-8 font-body text-xl text-warm-gray-300 md:text-2xl">
+		<h2 class="mt-8 text-xl font-body text-warm-gray-300 md:text-2xl">
 			Browse the base palette colors :
 		</h2>
 		<colors-list
@@ -30,13 +30,13 @@
 				</button>
 			</template>
 		</colors-list>
-		<h2 class="mt-8 font-body text-xl text-warm-gray-300 md:text-2xl">
+		<h2 class="mt-8 text-xl font-body text-warm-gray-300 md:text-2xl">
 			Create your own colors :
 		</h2>
-		<section class="grid mt-6 gap-6 grid-cols-2">
+		<section class="grid grid-cols-2 gap-6 mt-6">
 			<button
 				v-if="state === 'inactive'"
-				class="px-4 py-4 text-lg font-display font-bold border rounded shadow-md bg-warm-gray-700 border-true-gray-800"
+				class="px-4 py-4 text-lg font-bold border rounded shadow-md font-display bg-warm-gray-700 border-true-gray-800"
 				@click="state = 'choosing'"
 			>
 				Generate a custom shade for one of the base colors
@@ -57,12 +57,27 @@
 				@colorEdited="state = 'choosing'"
 			/>
 			<button
-				class="px-4 py-4 text-lg font-display font-bold border rounded shadow-md bg-warm-gray-700 border-true-gray-800"
+				class="px-4 py-4 text-lg font-bold border rounded shadow-md font-display bg-warm-gray-700 border-true-gray-800"
 				@click="wipText = 'Coming soon™. :)'"
 			>
 				{{ wipText }}
 			</button>
 		</section>
+		<h3
+			v-if="customColorsInfos.length"
+			class="mt-8 text-lg font-body text-warm-gray-300 md:text-xl"
+		>
+			Your custom shades :
+		</h3>
+		<colors-list
+			v-if="customColorsInfos.length"
+			wide
+			:colors-list="customColorsInfos"
+		>
+			<template #default="{ currValue }">
+				<color-item v-bind="currValue" />
+			</template>
+		</colors-list>
 	</layout>
 </template>
 
@@ -73,7 +88,6 @@ import colors from "windicss/colors";
 import Layout from "@/components/atoms/Layout.vue";
 import MainTitle from "@/components/atoms/MainTitle.vue";
 import ColorsList from "@/components/molecules/ColorsList.vue";
-import ValidateButton from "@/components/molecules/ValidateButton.vue";
 import ColorInput from "@/components/molecules/ColorInput.vue";
 import ColorItem from "@/components/organisms/ColorItem.vue";
 
@@ -85,6 +99,7 @@ import {
 } from "@/utils";
 import { computed } from "@vue/runtime-core";
 import { watchEffect } from "vue";
+import { useCustomColors } from "@/hooks";
 
 const colorPalette = Object.entries(colors)
 	.filter(([key, _value]) => key !== "white" && key !== "black")
@@ -145,6 +160,12 @@ watchEffect(() => {
 		closestShade - currShade
 	);
 });
+
+const {
+	customColorsInfos,
+	addCustomShade,
+	editShadeFromColor,
+} = useCustomColors();
 
 ref: wipText = "Generate all shades for a given color";
 </script>

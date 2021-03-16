@@ -7,7 +7,7 @@
 	>
 		<input
 			:value="modelValue"
-			class="md:text-lg sm:text-base text-sm rounded shadow-md border-warm-gray-800 bg-warm-gray-700"
+			class="text-sm rounded shadow-md md:text-lg sm:text-base border-warm-gray-800 bg-warm-gray-700"
 			:class="{
 				'box-content font-bold w-3ch': type === 'number',
 				'': type === 'text',
@@ -15,7 +15,7 @@
 			:type="type"
 			:pattern="`${type === 'number' ? '[0-9]*' : ''}`"
 			:inputmode="`${type === 'number' ? 'numeric' : 'text'}`"
-			:placeholder="`${type === 'number' ? '000' : 'warm-gray-600'}`"
+			:placeholder="`${type === 'number' ? '000' : 'warmGray-600'}`"
 			@input="$emit('update:modelValue', $event.target?.value)"
 		/>
 		<validate-button

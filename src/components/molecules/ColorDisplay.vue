@@ -7,16 +7,16 @@
 		}"
 	>
 		<strong
-			class="md:text-3xl sm:text-2xl text-xl font-bold font-display"
+			class="text-xl font-bold md:text-3xl sm:text-2xl font-display"
 			:class="{
 				'text-warm-gray-50': shadeNumber >= 400,
 				'text-warm-gray-800': shadeNumber < 400,
 			}"
 		>
-			{{ shadeNumber }}
+			{{ colorName ? `${colorName}-` : "" }}{{ shadeNumber }}
 		</strong>
 		<span
-			class="md:text-2xl sm:text-xl text-base"
+			class="text-base md:text-2xl sm:text-xl"
 			:class="{
 				'text-warm-gray-200': shadeNumber >= 400,
 				'text-warm-gray-700': shadeNumber < 400,
@@ -35,6 +35,7 @@ import { defineProps } from "@vue/runtime-core";
 import colors from "windicss/colors";
 
 const props = defineProps<{
+	colorName?: string;
 	hexCode: string;
 	shadeNumber: number;
 }>();

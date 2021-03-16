@@ -1,4 +1,5 @@
 import { ref } from "@vue/reactivity";
+import { computed } from "vue";
 import colors from "windicss/colors";
 
 const customColors = ref(
@@ -6,6 +7,29 @@ const customColors = ref(
 		(result, key) => ({ ...result, [key]: {} }),
 		{} as Record<string, Record<number, string>>
 	)
+);
+
+interface ColorInfos {
+	colorName: string;
+	shadeNumber: number;
+	hexCode: string;
+}
+
+const customColorsInfos = computed(() =>
+	Object.entries(customColors.value)
+		.reduce(
+			(result, [colorName, value]) => [
+				...result,
+				...Object.entries(value).map(([shadeNumber, hexCode]) => ({
+					colorName,
+					shadeNumber: Number(shadeNumber),
+					hexCode,
+				})),
+			],
+			[] as Array<ColorInfos>
+		)
+		.flat()
+		.sort((a, b) => a.colorName.localeCompare(b.colorName))
 );
 
 const addCustomShade = ({
@@ -45,6 +69,7 @@ const editShadeFromColor = ({
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const useCustomColors = () => ({
 	customColors,
+	customColorsInfos,
 	addCustomShade,
 	removeShadeFromColor,
 	editShadeFromColor,

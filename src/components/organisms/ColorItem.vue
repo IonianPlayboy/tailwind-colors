@@ -1,14 +1,14 @@
 <template>
 	<section class="relative w-full">
 		<copy-button
-			class="top-2 absolute left-2 sm:top-3 sm:left-3 md:top-4 md:left-4"
-			v-bind="{ hexCode, shadeNumber }"
+			class="absolute top-2 left-2 sm:top-3 sm:left-3 md:top-4 md:left-4"
+			v-bind="{ shadeNumber, hexCode }"
 		/>
-		<color-display v-bind="{ hexCode, shadeNumber }" />
+		<color-display v-bind="{ colorName, shadeNumber, hexCode }" />
 		<edit-button
 			v-if="editable"
 			v-bind="{ hexCode, shadeNumber }"
-			class="top-2 absolute right-2 sm:top-3 sm:right-3 md:top-4 md:right-4"
+			class="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4"
 			@buttonClicked="$emit('colorEdited')"
 		/>
 	</section>
@@ -24,8 +24,9 @@ import ColorDisplay from "@/components/molecules/ColorDisplay.vue";
 import EditButton from "@/components/molecules/EditButton.vue";
 
 const props = defineProps<{
-	hexCode: string;
+	colorName?: string;
 	shadeNumber: number;
+	hexCode: string;
 	editable?: boolean;
 }>();
 
