@@ -25,7 +25,7 @@ import { defineEmit, watchEffect } from "vue";
 import ColorItem from "@/components/organisms/ColorItem.vue";
 import ColorInput from "@/components/molecules/ColorInput.vue";
 
-import { findClosestShade, adjustColor } from "@/utils";
+import { getCustomColor } from "@/utils";
 
 const props = defineProps<{
 	colorName: string;
@@ -42,19 +42,7 @@ ref: newShadeNumber = props.shadeNumber;
 watchEffect(() => {
 	if (!Number(currInput)) return;
 	newShadeNumber = Number(currInput);
-	const foundShade = props.currShades[newShadeNumber];
-	if (foundShade) return (customColor = foundShade);
-	const closestShade = findClosestShade(newShadeNumber, props.currShades);
-	const nearestShade = findClosestShade(
-		newShadeNumber,
-		props.currShades,
-		closestShade
-	);
-	customColor = adjustColor(
-		props.currShades[closestShade],
-		props.currShades[nearestShade],
-		closestShade - newShadeNumber
-	);
+	customColor = getCustomColor(newShadeNumber, props.currShades);
 });
 
 const emit = defineEmit<

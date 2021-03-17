@@ -1,3 +1,5 @@
+import { Ref } from "vue";
+
 type RGB = "red" | "green" | "blue";
 type RGBValues = [redValue: number, greenValue: number, blueValue: number];
 
@@ -23,28 +25,54 @@ const calculateNewRGBValue = (
 		0
 	);
 
-export const adjustColor = (
+const adjustColor = (
 	closestColor: string,
 	nearestColor: string,
 	amount: number
-): string => {
+) => {
+	// console.log(`closestColor : ${closestColor}`);
+	// console.log(`nearestColor : ${nearestColor}`);
+	// console.log(`amount : ${amount}`);
 	const closestValues = getValuesFromColor(closestColor);
 	const nearestValues = getValuesFromColor(nearestColor);
 
+	// console.log(`closestValues : `, closestValues);
+	// console.log(`nearestValues : `, nearestValues);
 	const adjustedValues = (Object.entries(closestValues) as Array<
 		[RGB, number]
 	>).map(([currKey, currValue]) => {
-		const currGap = Math.abs(currValue - nearestValues[currKey]);
-		return calculateNewRGBValue(currValue, currGap, amount);
+		const currGap = nearestValues[currKey] - currValue;
+		console.log(`${currKey} currGap : ${currGap}`);
+		return calculateNewRGBValue(currValue, currGap, Math.abs(amount));
 	}) as RGBValues;
-
+	// console.log(`adjustedValues : ${adjustedValues}`);
 	return formatHexColor(...adjustedValues);
 };
-export const findClosestShade = (
+
+export const getCustomColor = (
+	shadeNumber: number,
+	shadesList: Record<number, string>
+): string => {
+	const foundShade = shadesList[shadeNumber];
+	if (foundShade) return foundShade;
+	const closestShade = findClosestShade(shadeNumber, shadesList);
+	const nearestShade = findClosestShade(
+		shadeNumber,
+		shadesList,
+		closestShade
+	);
+	return adjustColor(
+		shadesList[closestShade],
+		shadesList[nearestShade],
+		closestShade - shadeNumber
+	);
+};
+
+const findClosestShade = (
 	currValue: number,
 	currShades: Record<string | number, string>,
 	shadeToExclude?: number
-): number =>
+) =>
 	Object.keys(currShades).reduce((result, key) => {
 		if (!result) return Number(key);
 		if (shadeToExclude && shadeToExclude === Number(key)) return result;

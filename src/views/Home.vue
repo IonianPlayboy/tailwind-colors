@@ -91,12 +91,7 @@ import ColorsList from "@/components/molecules/ColorsList.vue";
 import ColorInput from "@/components/molecules/ColorInput.vue";
 import ColorItem from "@/components/organisms/ColorItem.vue";
 
-import {
-	formatColorKey,
-	copyCurrValue,
-	adjustColor,
-	findClosestShade,
-} from "@/utils";
+import { formatColorKey, copyCurrValue, getCustomColor } from "@/utils";
 import { computed } from "@vue/runtime-core";
 import { watchEffect } from "vue";
 import { useCustomColors } from "@/hooks";
@@ -142,23 +137,9 @@ ref: currShade = computed(() => {
 
 watchEffect(() => {
 	if (!currInput || !currShade || !currColorName) return;
-	const foundShades = colors[currColorName as keyof typeof colors] as Record<
-		string | number,
-		string
-	>;
-	console.log(Object.keys(colors));
-	console.log(foundShades);
+	const foundShades = colors[currColorName as keyof typeof colors];
 	if (!foundShades) return;
-	const foundCurrShade = foundShades[currShade];
-	if (foundCurrShade) return (customColor = foundCurrShade);
-	const closestShade = findClosestShade(currShade, foundShades);
-	const nearestShade = findClosestShade(currShade, foundShades, closestShade);
-	console.log(closestShade, nearestShade);
-	customColor = adjustColor(
-		foundShades[closestShade],
-		foundShades[nearestShade],
-		closestShade - currShade
-	);
+	customColor = getCustomColor(currShade, foundShades);
 });
 
 const {

@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { adjustColor, findClosestShade } from "@/utils";
+import { getCustomColor } from "@/utils";
 import { defineEmit, defineProps, watchEffect } from "@vue/runtime-core";
 </script>
 <script setup lang="ts">
@@ -40,19 +40,7 @@ ref: customColor = null as null | string;
 watchEffect(() => {
 	if (!Number(currInput)) return;
 	shadeNumber = Number(currInput);
-	const foundShade = props.currShades[shadeNumber];
-	if (foundShade) return (customColor = foundShade);
-	const closestShade = findClosestShade(shadeNumber, props.currShades);
-	const nearestShade = findClosestShade(
-		shadeNumber,
-		props.currShades,
-		closestShade
-	);
-	customColor = adjustColor(
-		props.currShades[closestShade],
-		props.currShades[nearestShade],
-		closestShade - shadeNumber
-	);
+	customColor = getCustomColor(shadeNumber, props.currShades);
 });
 
 const emit = defineEmit<
