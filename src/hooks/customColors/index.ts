@@ -53,17 +53,17 @@ const removeShadeFromColor = (colorName: string, shadeNumber: number) => {
 
 const editShadeFromColor = ({
 	colorName,
+	shadeNumber,
 	oldShadeNumber,
-	newShadeNumber,
 	hexCode,
 }: {
 	colorName: string;
+	shadeNumber: number;
 	oldShadeNumber: number;
-	newShadeNumber: number;
 	hexCode: string;
 }) => {
 	removeShadeFromColor(colorName, oldShadeNumber);
-	addCustomShade({ colorName, shadeNumber: newShadeNumber, hexCode });
+	addCustomShade({ colorName, shadeNumber, hexCode });
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

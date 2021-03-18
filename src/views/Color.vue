@@ -16,18 +16,19 @@
 				/>
 			</template>
 			<template #custom="{ currKey, currValue }">
-				<editable-color
+				<custom-color
+					no-start-button
 					:color-name="currColor"
 					:hex-code="currValue"
 					:shade-number="Number(currKey)"
-					:curr-shades="currShades"
+					:shades-list="currShades"
 					@colorValidated="editShadeFromColor($event)"
 				/>
 			</template>
 			<template #last>
 				<custom-color
-					small
-					v-bind="{ currColor, currShades }"
+					:color-name="currColor"
+					:shades-list="currShades"
 					@colorValidated="addCustomShade($event)"
 				>
 					Create your own...
@@ -45,7 +46,6 @@ import Layout from "@/components/atoms/Layout.vue";
 import MainTitle from "@/components/atoms/MainTitle.vue";
 import ColorsList from "@/components/molecules/ColorsList.vue";
 import ColorItem from "@/components/organisms/ColorItem.vue";
-import EditableColor from "@/components/organisms/EditableColor.vue";
 import CustomColor from "@/components/CustomColor.vue";
 import colors from "windicss/colors";
 import { formatColorKey } from "@/utils";
