@@ -93,15 +93,11 @@ watchEffect(() => {
 });
 
 const emit = defineEmit<
-	(
-		event: "colorValidated" | "colorEdited",
-		payload: Record<string, number | string>
-	) => void
+	(event: "colorValidated", payload: Record<string, number | string>) => void
 >();
 
 const colorWasValidated = () => {
 	if (!currInput || !customColor) return;
-	// const currEvent = props.noStartButton || props
 	emit("colorValidated", {
 		colorName: currColorName as string,
 		shadeNumber: currShade as number,

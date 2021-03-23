@@ -34,28 +34,9 @@
 			Create your own colors :
 		</h2>
 		<section class="grid grid-cols-2 gap-6 mt-6">
-			<button
-				v-if="state === 'inactive'"
-				class="px-4 py-4 text-lg font-bold border rounded shadow-md font-display bg-warm-gray-700 border-true-gray-800"
-				@click="state = 'choosing'"
-			>
+			<custom-color standalone @colorValidated="addCustomShade($event)">
 				Generate a custom shade for one of the base colors
-			</button>
-			<color-input
-				v-if="state === 'choosing'"
-				v-model="currInput"
-				type="text"
-				:custom-color="customColor ?? ''"
-				:shade-number="currShade ?? 0"
-				@buttonClicked="state = 'done'"
-			/>
-			<color-item
-				v-if="state === 'done'"
-				editable
-				:hex-code="customColor"
-				:shade-number="currShade"
-				@colorEdited="state = 'choosing'"
-			/>
+			</custom-color>
 			<button
 				class="px-4 py-4 text-lg font-bold border rounded shadow-md font-display bg-warm-gray-700 border-true-gray-800"
 				@click="wipText = 'Coming soon™. :)'"
@@ -88,12 +69,10 @@ import colors from "windicss/colors";
 import Layout from "@/components/atoms/Layout.vue";
 import MainTitle from "@/components/atoms/MainTitle.vue";
 import ColorsList from "@/components/molecules/ColorsList.vue";
-import ColorInput from "@/components/molecules/ColorInput.vue";
 import ColorItem from "@/components/organisms/ColorItem.vue";
+import CustomColor from "@/components/CustomColor.vue";
 
-import { formatColorKey, copyCurrValue, getCustomColor } from "@/utils";
-import { computed } from "@vue/runtime-core";
-import { watchEffect } from "vue";
+import { formatColorKey, copyCurrValue } from "@/utils";
 import { useCustomColors } from "@/hooks";
 
 const colorPalette = Object.entries(colors)
@@ -117,36 +96,7 @@ const getBasicColorStyle = (color: "white" | "black") =>
 						6px ${colorPalette.warmGray[300]}`,
 		  };
 
-ref: state = "inactive" as "inactive" | "choosing" | "done";
-ref: currInput = "";
-ref: customColor = null as null | string;
-ref: currColorName = computed(() => {
-	if (!currInput) return null;
-	const [currMatch] = currInput.match(/[-\w]+(?=(-\d+))/) ?? [];
-	if (!currMatch) return null;
-	return currMatch.replace(/-\w/, (match) =>
-		match.toUpperCase().replace("-", "")
-	);
-});
-ref: currShade = computed(() => {
-	if (!currInput) return null;
-	const [currMatch] = currInput.match(/\d+/) ?? [];
-	if (!currMatch) return null;
-	return Number(currMatch);
-});
-
-watchEffect(() => {
-	if (!currInput || !currShade || !currColorName) return;
-	const foundShades = colors[currColorName as keyof typeof colors];
-	if (!foundShades) return;
-	customColor = getCustomColor(currShade, foundShades);
-});
-
-const {
-	customColorsInfos,
-	addCustomShade,
-	editShadeFromColor,
-} = useCustomColors();
+const { customColorsInfos, addCustomShade } = useCustomColors();
 
 ref: wipText = "Generate all shades for a given color";
 </script>
