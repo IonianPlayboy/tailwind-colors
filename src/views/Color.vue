@@ -46,7 +46,7 @@ import Layout from "@/components/atoms/Layout.vue";
 import MainTitle from "@/components/atoms/MainTitle.vue";
 import ColorsList from "@/components/molecules/ColorsList.vue";
 import ColorItem from "@/components/organisms/ColorItem.vue";
-import CustomColor from "@/components/CustomColor.vue";
+import CustomColor from "@/components/organisms/CustomColor.vue";
 import colors from "windicss/colors";
 import { formatColorKey } from "@/utils";
 import { useCustomColors } from "@/hooks";
