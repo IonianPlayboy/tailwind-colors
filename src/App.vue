@@ -1,12 +1,12 @@
 <template>
 	<router-view />
-	<alerts-handler />
+	<alerts-list />
 </template>
 
 <script lang="ts"></script>
 
 <script setup lang="ts">
-import AlertsHandler from "@/components/AlertsHandler.vue";
+import AlertsList from "@/components/AlertsList.vue";
 </script>
 
 <style>

@@ -19,7 +19,9 @@
 					backgroundColor: currValue,
 					...getBasicColorStyle(currKey),
 				}"
-				@click="copyCurrValue(currValue)"
+				@click="
+					copyCurrValue(currValue, currKey === 'black' ? 900 : 50)
+				"
 			>
 				{{ formatColorKey(currKey) }}
 			</button>

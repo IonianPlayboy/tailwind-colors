@@ -3,7 +3,7 @@
 		:curr-title="'Copy the current color hexcode'"
 		:curr-icon="'copy'"
 		v-bind="{ hexCode, shadeNumber }"
-		@buttonClicked="copyCurrValue(hexCode)"
+		@buttonClicked="copyCurrValue(hexCode, shadeNumber)"
 	/>
 </template>
 
