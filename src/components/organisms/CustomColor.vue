@@ -4,7 +4,7 @@
 		class="font-bold border rounded shadow-lg"
 		:class="{
 			'w-full h-full bg-warm-gray-600 border-warm-gray-700': !standalone,
-			'px-4 py-4 text-lg font-display bg-warm-gray-700 border-true-gray-800 md:text-xl': standalone,
+			'px-4 py-6 text-lg font-display bg-warm-gray-700 border-true-gray-800 md:text-xl': standalone,
 		}"
 		@click="state = 'choosing'"
 	>

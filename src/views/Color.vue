@@ -1,8 +1,8 @@
 <template>
 	<layout>
 		<main-title :style="{ color: currShades[300] }">
-			{{ formatColorKey(currColor) }}</main-title
-		>
+			{{ formatColorKey(currColor) }}
+		</main-title>
 		<router-link class="mt-3" to="/">&lt; Go back</router-link>
 		<colors-list
 			wide

@@ -45,7 +45,9 @@ import { defineProps, useContext } from "@vue/runtime-core";
 <script setup lang="ts">
 import ListItem from "@/components/atoms/ListItem.vue";
 const props = defineProps<{
-	colorsList: Record<string, string | Record<number | string, string>>;
+	colorsList:
+		| Record<string, string | Record<number | string, string>>
+		| Array<Record<string, string | number>>;
 	customColors?: Record<string, string>;
 	basicColors?: Record<string, string>;
 	smallItems?: boolean;

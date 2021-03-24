@@ -4,32 +4,7 @@
 		<h2 class="mt-8 text-xl font-body text-warm-gray-300 md:text-2xl">
 			Browse the base palette colors :
 		</h2>
-		<colors-list
-			small-items
-			:colors-list="colorPalette"
-			:basic-colors="basicColors"
-		>
-			<template #default="{ currKey, currValue }">
-				<router-link
-					class="flex items-center justify-center flex-grow rounded shadow-lg"
-					:style="{ backgroundColor: currValue[700] }"
-					:to="`/color/${currKey}`"
-					>{{ formatColorKey(currKey) }}</router-link
-				>
-			</template>
-			<template #basic="{ currKey, currValue }">
-				<button
-					class="flex items-center justify-center flex-grow font-bold rounded"
-					:style="{
-						backgroundColor: currValue,
-						...getBasicColorStyle(currKey),
-					}"
-					@click="copyCurrValue(currValue)"
-				>
-					{{ formatColorKey(currKey) }}
-				</button>
-			</template>
-		</colors-list>
+		<default-colors-list />
 		<h2 class="mt-8 text-xl font-body text-warm-gray-300 md:text-2xl">
 			Create your own colors :
 		</h2>
@@ -38,7 +13,7 @@
 				Generate a custom shade for one of the base colors
 			</custom-color>
 			<button
-				class="px-4 py-4 text-lg font-bold border rounded shadow-md font-display bg-warm-gray-700 border-true-gray-800"
+				class="px-4 py-6 text-lg font-bold border rounded shadow-md font-display bg-warm-gray-700 border-true-gray-800 md:text-xl"
 				@click="wipText = 'Coming soon™. :)'"
 			>
 				{{ wipText }}
@@ -68,33 +43,12 @@ import colors from "windicss/colors";
 <script setup lang="ts">
 import Layout from "@/components/atoms/Layout.vue";
 import MainTitle from "@/components/atoms/MainTitle.vue";
+import DefaultColorsList from "@/components/organisms/DefaultColorsList.vue";
 import ColorsList from "@/components/molecules/ColorsList.vue";
 import ColorItem from "@/components/organisms/ColorItem.vue";
 import CustomColor from "@/components/organisms/CustomColor.vue";
 
-import { formatColorKey, copyCurrValue } from "@/utils";
 import { useCustomColors } from "@/hooks";
-
-const colorPalette = Object.entries(colors)
-	.filter(([key, _value]) => key !== "white" && key !== "black")
-	.reduce(
-		(result, [key, value]) => ({ ...result, [key]: value }),
-		{} as Omit<typeof colors, "white" | "black">
-	);
-const basicColors = Object.entries(colors)
-	.filter(([key, _value]) => key === "white" || key === "black")
-	.reduce(
-		(result, [key, value]) => ({ ...result, [key]: value }),
-		{} as Pick<typeof colors, "white" | "black">
-	);
-const getBasicColorStyle = (color: "white" | "black") =>
-	color === "black"
-		? {}
-		: {
-				color: colorPalette.warmGray[900],
-				textShadow: `2px 2px
-						6px ${colorPalette.warmGray[300]}`,
-		  };
 
 const { customColorsInfos, addCustomShade } = useCustomColors();
 
