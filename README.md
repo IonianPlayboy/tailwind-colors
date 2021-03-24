@@ -1,5 +1,7 @@
 # Tailwind Colors
 
+![Netlify Status](https://api.netlify.com/api/v1/badges/b2bd03c0-caf3-4ad5-9187-be3dd3e5847a/deploy-status)
+
 The website is [currently live on Netlify](https://tailwind-colorpicker.netlify.app/), with automatic deploys enabled.
 
 ## How to run the project locally
