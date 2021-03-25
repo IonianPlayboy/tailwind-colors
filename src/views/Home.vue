@@ -34,6 +34,72 @@
 				<color-item v-bind="currValue" />
 			</template>
 		</colors-list>
+		<ul v-if="baseColor" class="flex items-center">
+			<li
+				v-for="({ hexCode, rgb }, shadeNumber) in baseColor"
+				:key="`base${hexCode}${shadeNumber}`"
+				class="h-20 w-45"
+				:class="{
+					'text-warm-gray-50': shadeNumber >= 400,
+					'text-warm-gray-800': shadeNumber < 400,
+				}"
+				:style="{ backgroundColor: hexCode }"
+			>
+				{{ shadeNumber }}
+				<br />
+				{{ hexCode }}
+				<br />
+				<div>
+					<span v-for="(value, key) in rgb" :key="`base${key}`">
+						{{ key.charAt(0) }}{{ value }}
+					</span>
+				</div>
+			</li>
+		</ul>
+		<ul v-if="testColor" class="flex items-center">
+			<li
+				v-for="({ hexCode, rgb }, shadeNumber) in testColor"
+				:key="`base${hexCode}${shadeNumber}`"
+				class="h-20 w-45"
+				:class="{
+					'text-warm-gray-50': shadeNumber >= 400,
+					'text-warm-gray-800': shadeNumber < 400,
+				}"
+				:style="{ backgroundColor: hexCode }"
+			>
+				{{ shadeNumber }}
+				<br />
+				{{ hexCode }}
+				<br />
+				<div>
+					<span v-for="(value, key) in rgb" :key="`base${key}`">
+						{{ key.charAt(0) }}{{ value }}
+					</span>
+				</div>
+			</li>
+		</ul>
+		<ul class="flex items-center">
+			<li
+				v-for="({ hexCode, rgb }, shadeNumber) in generatedColor"
+				:key="`generated${hexCode}${shadeNumber}`"
+				class="h-20 w-30"
+				:class="{
+					'text-warm-gray-50': shadeNumber >= 400,
+					'text-warm-gray-800': shadeNumber < 400,
+				}"
+				:style="{ backgroundColor: hexCode }"
+			>
+				{{ shadeNumber }}
+				<br />
+				{{ hexCode }}
+				<br />
+				<div>
+					<span v-for="(value, key) in rgb" :key="`generated${key}`">
+						{{ key.charAt(0) }}{{ value }}
+					</span>
+				</div>
+			</li>
+		</ul>
 	</layout>
 </template>
 
@@ -49,6 +115,47 @@ import ColorItem from "@/components/organisms/ColorItem.vue";
 import CustomColor from "@/components/organisms/CustomColor.vue";
 
 import { useCustomColors } from "@/hooks";
+import {
+	generateShadesForColor,
+	getClosestDefaultColor,
+	getGapsBetweenBasicShades,
+} from "@/utils";
+
+console.log(colors);
+
+console.log(getGapsBetweenBasicShades());
+
+console.log(getClosestDefaultColor("#c9e6a2"));
+// console.log(getClosestDefaultColor("#fbbf24"));
+// console.log(generateShadesForColor("#fbbf24"));
+// console.log(colors.amber);
+
+// const baseColor = getGapsBetweenBasicShades().pink;
+// const testColor = getGapsBetweenBasicShades().yellow;
+const generatedColor = generateShadesForColor("#c9e6a2");
+// console.log(baseColor);
+console.log(generatedColor);
+
+// console.log(
+// 	(Object.entries(baseColor[400].rgb) as Array<[string, number]>).reduce(
+// 		(res, [key, value]) => ({
+// 			...res,
+// 			[key]: Math.max(
+// 				Math.min(
+// 					Math.round(
+// 						value +
+// 							(baseColor[400].toNext
+// 								? baseColor[400].toNext[key]
+// 								: 0)
+// 					),
+// 					255
+// 				),
+// 				0
+// 			),
+// 		}),
+// 		{}
+// 	)
+// );
 
 const { customColorsInfos, addCustomShade } = useCustomColors();
 

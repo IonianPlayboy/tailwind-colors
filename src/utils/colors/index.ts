@@ -1,7 +1,11 @@
 import { Ref } from "vue";
 
 export type RGB = "red" | "green" | "blue";
-type RGBValues = [redValue: number, greenValue: number, blueValue: number];
+export type RGBValues = [
+	redValue: number,
+	greenValue: number,
+	blueValue: number
+];
 
 export const getValuesFromHexCode = (
 	currColor: string
@@ -14,7 +18,11 @@ export const getValuesFromHexCode = (
 const formatHexValue = (currValue: number) =>
 	`${currValue < 16 ? "0" : ""}${currValue.toString(16)}`;
 
-const formatHexColor = (red: number, green: number, blue: number) =>
+export const formatHexColor = (
+	red: number,
+	green: number,
+	blue: number
+): string =>
 	`#${formatHexValue(red)}${formatHexValue(green)}${formatHexValue(blue)}`;
 
 export const calculateRGBGap = (
@@ -26,7 +34,10 @@ export const calculateRGBGap = (
 	return (Object.entries(baseRGBValues) as Array<[RGB, number]>).reduce(
 		(result, [key, value]) => ({
 			...result,
-			[key]: otherRBGValues[key] - value,
+			[key]: Math.max(
+				Math.min(Math.round(otherRBGValues[key] - value), 255),
+				-255
+			),
 		}),
 		{} as Record<RGB, number>
 	);

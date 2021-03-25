@@ -24,6 +24,7 @@ export const copyCurrValue = async (
 	}
 };
 export * from "./colors";
+export * from "./generateColor";
 
 import colors from "windicss/colors";
 export const getCurrTextShadow = (shadeNumber: number): string => {
