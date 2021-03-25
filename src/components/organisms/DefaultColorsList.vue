@@ -6,11 +6,15 @@
 	>
 		<template #default="{ currKey, currValue }">
 			<router-link
-				class="flex items-center justify-center flex-grow rounded shadow-lg"
-				:style="{ backgroundColor: currValue[700] }"
+				class="flex text-center p-2 items-center justify-center flex-grow rounded shadow-lg"
+				:style="{
+					backgroundColor: currValue[700],
+					textShadow: getCurrTextShadow(700),
+				}"
 				:to="`/color/${currKey}`"
-				>{{ formatColorKey(currKey) }}</router-link
 			>
+				{{ formatColorKey(currKey) }}
+			</router-link>
 		</template>
 		<template #basic="{ currKey, currValue }">
 			<button
@@ -34,7 +38,7 @@ import colors from "windicss/colors";
 </script>
 <script setup lang="ts">
 import ColorsList from "@/components/molecules/ColorsList.vue";
-import { formatColorKey, copyCurrValue } from "@/utils";
+import { formatColorKey, copyCurrValue, getCurrTextShadow } from "@/utils";
 
 const colorPalette = Object.entries(colors)
 	.filter(([key, _value]) => key !== "white" && key !== "black")
@@ -51,10 +55,11 @@ const basicColors = Object.entries(colors)
 
 const getBasicColorStyle = (color: "white" | "black") =>
 	color === "black"
-		? {}
+		? {
+				textShadow: getCurrTextShadow(900),
+		  }
 		: {
 				color: colorPalette.warmGray[900],
-				textShadow: `2px 2px
-						6px ${colorPalette.warmGray[300]}`,
+				textShadow: getCurrTextShadow(50),
 		  };
 </script>

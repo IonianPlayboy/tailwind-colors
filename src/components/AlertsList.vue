@@ -1,8 +1,8 @@
 <template>
-	<div class="absolute w-full bottom-5">
+	<div class="fixed w-full bottom-5">
 		<transition-group
 			tag="div"
-			class="relative flex flex-col w-3/6 mx-auto space-y-5"
+			class="relative flex flex-col w-sm md:w-4/10 mx-auto space-y-5"
 			name="alert"
 		>
 			<!--  -->

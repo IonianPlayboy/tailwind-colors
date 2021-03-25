@@ -1,9 +1,19 @@
 <template>
 	<layout>
-		<main-title :style="{ color: currShades[300] }">
+		<main-title
+			:style="{
+				color: currShades[300],
+				textShadow: getCurrTextShadow(900),
+			}"
+		>
 			{{ formatColorKey(currColor) }}
 		</main-title>
-		<router-link class="mt-3" to="/">&lt; Go back</router-link>
+		<router-link
+			class="mt-4 text-warm-gray-100 inline-block text-xl"
+			to="/"
+		>
+			&lt; Go back
+		</router-link>
 		<colors-list
 			wide
 			:colors-list="currShades"
@@ -48,7 +58,7 @@ import ColorsList from "@/components/molecules/ColorsList.vue";
 import ColorItem from "@/components/organisms/ColorItem.vue";
 import CustomColor from "@/components/organisms/CustomColor.vue";
 import colors from "windicss/colors";
-import { formatColorKey } from "@/utils";
+import { formatColorKey, getCurrTextShadow } from "@/utils";
 import { useCustomColors } from "@/hooks";
 
 const currRoute = useRoute();
