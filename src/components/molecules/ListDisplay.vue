@@ -4,31 +4,22 @@
 			'grid-cols-3': wide,
 			'md:grid-cols-6 sm:grid-cols-4 grid-cols-3': !wide,
 		}"
-		class="grid gap-6 mt-6 text-base sm:text-lg lg:text-xl font-bold font-display place-items-center"
+		class="grid gap-6 mt-6 text-base font-bold sm:text-lg lg:text-xl font-display place-items-center"
 	>
 		<list-item
-			v-for="(value, key) in colorsList"
-			:key="key"
+			v-for="(value, key) in primaryList"
+			:key="`primary${key}`"
 			:small="smallItems"
 		>
 			<slot :currValue="value" :currKey="key" />
 		</list-item>
-		<template v-if="basicColors">
+		<template v-if="secondaryList">
 			<list-item
-				v-for="(value, key) in basicColors"
-				:key="key"
+				v-for="(value, key) in secondaryList"
+				:key="`secondary${key}`"
 				:small="smallItems"
 			>
-				<slot name="basic" :currValue="value" :currKey="key" />
-			</list-item>
-		</template>
-		<template v-if="customColors">
-			<list-item
-				v-for="(value, key) in customColors"
-				:key="`custom${key}`"
-				:small="smallItems"
-			>
-				<slot name="custom" :currValue="value" :currKey="key" />
+				<slot name="secondary" :currValue="value" :currKey="key" />
 			</list-item>
 		</template>
 		<template v-if="slots.last">
@@ -45,11 +36,10 @@ import { defineProps, useContext } from "@vue/runtime-core";
 <script setup lang="ts">
 import ListItem from "@/components/atoms/ListItem.vue";
 const props = defineProps<{
-	colorsList:
+	primaryList:
 		| Record<string, string | Record<number | string, string>>
 		| Array<Record<string, string | number>>;
-	customColors?: Record<string, string>;
-	basicColors?: Record<string, string>;
+	secondaryList?: Record<string, string>;
 	smallItems?: boolean;
 	wide?: boolean;
 }>();

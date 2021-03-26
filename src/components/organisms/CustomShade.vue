@@ -14,21 +14,21 @@
 		v-if="state === 'choosing'"
 		v-model="currInput"
 		:type="standalone ? 'text' : 'number'"
-		:custom-color="customColor ?? hexCode ?? ''"
+		:hex-code="customHexCode ?? baseHexCode ?? ''"
 		:shade-number="currShade ?? shadeNumber ?? 0"
-		@buttonClicked="colorWasValidated()"
+		@buttonClicked="shadeWasValidated()"
 	/>
 	<shade-item
 		v-if="shouldShowColorItem"
 		editable
-		:hex-code="standalone ? customColor : hexCode"
+		:hex-code="standalone ? customHexCode : baseHexCode"
 		:shade-number="standalone ? currShade : shadeNumber"
-		@colorEdited="state = 'choosing'"
+		@shadeEdited="state = 'choosing'"
 	/>
 </template>
 
 <script lang="ts">
-import { getCustomColor } from "@/utils";
+import { getCustomShade } from "@/utils";
 import {
 	computed,
 	defineEmit,
@@ -45,7 +45,7 @@ const props = defineProps<{
 	colorName?: string;
 	shadesList?: Record<string | number, string>;
 	shadeNumber?: number;
-	hexCode?: string;
+	baseHexCode?: string;
 	noStartButton?: boolean;
 	standalone?: boolean;
 }>();
@@ -58,7 +58,7 @@ ref: currShadesList = null as
 	| string
 	| undefined
 	| Record<string | number, string>;
-ref: customColor = null as null | string;
+ref: customHexCode = null as null | string;
 
 ref: shouldShowColorItem = computed(
 	() => (state === "inactive" && props.noStartButton) || state === "done"
@@ -89,24 +89,24 @@ watchEffect(() => {
 		? colors[currColorName as keyof typeof colors]
 		: props.shadesList;
 	if (!currShade || !currShadesList) return;
-	customColor = getCustomColor(currShade, currShadesList);
+	customHexCode = getCustomShade(currShade, currShadesList);
 });
 
 const emit = defineEmit<
-	(event: "colorValidated", payload: Record<string, number | string>) => void
+	(event: "shadeValidated", payload: Record<string, number | string>) => void
 >();
 
-const colorWasValidated = () => {
-	if (!currInput || !customColor) return;
-	emit("colorValidated", {
+const shadeWasValidated = () => {
+	if (!currInput || !customHexCode) return;
+	emit("shadeValidated", {
 		colorName: currColorName as string,
 		shadeNumber: currShade as number,
-		hexCode: customColor,
+		hexCode: customHexCode,
 		oldShadeNumber: props.shadeNumber as number,
 	});
 	currInput = !props.standalone && !props.noStartButton ? "" : currInput;
 	currShade = null;
-	customColor = null;
+	customHexCode = null;
 	state = props.standalone ? "done" : "inactive";
 };
 </script>

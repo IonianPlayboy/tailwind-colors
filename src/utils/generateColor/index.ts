@@ -1,7 +1,7 @@
 import {
 	calculateRGBGap,
-	formatHexColor,
-	getValuesFromHexCode,
+	convertRGBToHexCode,
+	convertHexCodeToRGB,
 	RGB,
 	RGBValues,
 } from "@/utils";
@@ -32,7 +32,7 @@ const getGapsForShadesList = (
 					toNext: nextHexCode
 						? calculateRGBGap(hexCode, nextHexCode)
 						: null,
-					rgb: getValuesFromHexCode(hexCode),
+					rgb: convertHexCodeToRGB(hexCode),
 				},
 			};
 		},
@@ -78,13 +78,13 @@ interface ClosestColorInfos extends ClosestShadeInfos {
 
 const getClosestShadeForColor = (
 	currColor: string,
-	shadesList: Record<number, RGBGapInfos>
+	shadesInfosList: Record<number, RGBGapInfos>
 ) =>
-	((Object.entries(shadesList) as unknown) as Array<
+	((Object.entries(shadesInfosList) as unknown) as Array<
 		[number, RGBGapInfos]
 	>).reduce((res, [shadeNumber, gapInfos]) => {
 		const currDistance = getDistanceBetweenColors(
-			getValuesFromHexCode(currColor),
+			convertHexCodeToRGB(currColor),
 			gapInfos.rgb
 		);
 		// console.log(colorName, shadeNumber, currDistance, res);
@@ -119,6 +119,7 @@ export const getClosestDefaultColor = (
 	);
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const generateShadesForColor = (currColor: string) => {
 	const defaultColorsGaps = getGapsBetweenBasicShades();
 	const closestDefaultColor = getClosestDefaultColor(currColor);
@@ -137,7 +138,7 @@ export const generateShadesForColor = (currColor: string) => {
 	};
 	const startingShade = closestDefaultColor.shadeNumber as keyof typeof result;
 	result[startingShade].hexCode = currColor;
-	result[startingShade].rgb = getValuesFromHexCode(currColor);
+	result[startingShade].rgb = convertHexCodeToRGB(currColor);
 	const upperShades = ((Object.keys(result) as unknown) as Array<
 		keyof typeof result
 	>).filter((key) => Number(key) > startingShade);
@@ -149,7 +150,7 @@ export const generateShadesForColor = (currColor: string) => {
 	upperShades.forEach((shade, i) => {
 		const prevShade = i ? upperShades[i - 1] : startingShade;
 		const currGap = defaultColorsGaps[colorName][prevShade];
-		const prevRGB = getValuesFromHexCode(result[prevShade].hexCode);
+		const prevRGB = convertHexCodeToRGB(result[prevShade].hexCode);
 		result[shade].rgb = (Object.entries(prevRGB) as Array<
 			[RGB, number]
 		>).reduce(
@@ -168,14 +169,14 @@ export const generateShadesForColor = (currColor: string) => {
 			{} as Record<RGB, number>
 		);
 		console.log("upper", shade, result[shade].rgb);
-		result[shade].hexCode = formatHexColor(
+		result[shade].hexCode = convertRGBToHexCode(
 			...(Object.values(result[shade].rgb) as RGBValues)
 		);
 	});
 	lowerShades.forEach((shade, i) => {
 		const prevShade = i ? lowerShades[i - 1] : startingShade;
 		const currGap = defaultColorsGaps[colorName][prevShade];
-		const prevRGB = getValuesFromHexCode(result[prevShade].hexCode);
+		const prevRGB = convertHexCodeToRGB(result[prevShade].hexCode);
 		result[shade].rgb = (Object.entries(prevRGB) as Array<
 			[RGB, number]
 		>).reduce(
@@ -197,7 +198,7 @@ export const generateShadesForColor = (currColor: string) => {
 			{} as Record<RGB, number>
 		);
 		console.log("lower", shade, result[shade].rgb);
-		result[shade].hexCode = formatHexColor(
+		result[shade].hexCode = convertRGBToHexCode(
 			...(Object.values(result[shade].rgb) as RGBValues)
 		);
 	});

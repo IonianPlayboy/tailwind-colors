@@ -9,7 +9,7 @@
 			Create your own colors :
 		</h2>
 		<section class="grid grid-cols-2 gap-6 mt-6">
-			<custom-shade standalone @colorValidated="addCustomShade($event)">
+			<custom-shade standalone @shadeValidated="addCustomShade($event)">
 				Generate a custom shade for one of the base colors
 			</custom-shade>
 			<button
@@ -49,15 +49,15 @@
 		>
 			Your custom shades :
 		</h3>
-		<shades-list
+		<list-display
 			v-if="customShadesInfos.length"
 			wide
-			:colors-list="customShadesInfos"
+			:primary-list="customShadesInfos"
 		>
 			<template #default="{ currValue }">
 				<shade-item v-bind="currValue" />
 			</template>
-		</shades-list>
+		</list-display>
 		<!-- <ul v-if="baseColor" class="flex items-center">
 			<li
 				v-for="({ hexCode, rgb }, shadeNumber) in baseColor"
@@ -112,7 +112,7 @@ import colors from "windicss/colors";
 import Layout from "@/components/atoms/Layout.vue";
 import MainTitle from "@/components/atoms/MainTitle.vue";
 import DefaultColorsList from "@/components/organisms/DefaultColorsList.vue";
-import ShadesList from "@/components/molecules/ShadesList.vue";
+import ListDisplay from "@/components/molecules/ListDisplay.vue";
 import ShadeItem from "@/components/organisms/ShadeItem.vue";
 import CustomShade from "@/components/organisms/CustomShade.vue";
 import ValidateButton from "@/components/molecules/ValidateButton.vue";

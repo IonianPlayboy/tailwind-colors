@@ -1,7 +1,7 @@
 <template>
 	<section
 		:style="{
-			backgroundColor: `${customColor ?? 'initial'}`,
+			backgroundColor: `${hexCode ?? 'initial'}`,
 		}"
 		class="flex items-center justify-center w-full h-full space-x-1.5 sm:space-x-3 md:space-x-8 font-bold transition-colors duration-300 ease-out border rounded shadow-lg bg-warm-gray-600 border-warm-gray-700"
 	>
@@ -19,7 +19,7 @@
 			@input="$emit('update:modelValue', $event.target?.value)"
 		/>
 		<validate-button
-			:hex-code="customColor ?? ''"
+			:hex-code="hexCode ?? ''"
 			:shade-number="shadeNumber ?? 0"
 			class="relative"
 			@buttonClicked="$emit('buttonClicked')"
@@ -34,7 +34,7 @@ import { defineProps } from "@vue/runtime-core";
 
 const props = defineProps<{
 	modelValue: string;
-	customColor: string;
+	hexCode: string;
 	shadeNumber: number;
 	type: "text" | "number";
 	small?: boolean;

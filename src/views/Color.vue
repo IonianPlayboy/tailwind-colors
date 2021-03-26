@@ -14,10 +14,10 @@
 		>
 			&lt; Go back
 		</router-link>
-		<shades-list
+		<list-display
 			wide
-			:colors-list="currShades"
-			:custom-colors="customShades"
+			:primary-list="currShades"
+			:secondary-list="customShades"
 		>
 			<template #default="{ currKey, currValue }">
 				<shade-item
@@ -25,26 +25,26 @@
 					:shade-number="Number(currKey)"
 				/>
 			</template>
-			<template #custom="{ currKey, currValue }">
+			<template #secondary="{ currKey, currValue }">
 				<custom-shade
 					no-start-button
 					:color-name="currColor"
-					:hex-code="currValue.hexCode"
+					:base-hex-code="currValue.hexCode"
 					:shade-number="currValue.shadeNumber"
 					:shades-list="currShades"
-					@colorValidated="editShadeFromColor($event)"
+					@shadeValidated="editShadeFromColor($event)"
 				/>
 			</template>
 			<template #last>
 				<custom-shade
 					:color-name="currColor"
 					:shades-list="currShades"
-					@colorValidated="addCustomShade($event)"
+					@shadeValidated="addCustomShade($event)"
 				>
 					Create your own...
 				</custom-shade>
 			</template>
-		</shades-list>
+		</list-display>
 	</layout>
 </template>
 <script lang="ts">
@@ -54,7 +54,7 @@ import { computed } from "@vue/runtime-core";
 <script setup lang="ts">
 import Layout from "@/components/atoms/Layout.vue";
 import MainTitle from "@/components/atoms/MainTitle.vue";
-import ShadesList from "@/components/molecules/ShadesList.vue";
+import ListDisplay from "@/components/molecules/ListDisplay.vue";
 import ShadeItem from "@/components/organisms/ShadeItem.vue";
 import CustomShade from "@/components/organisms/CustomShade.vue";
 import colors from "windicss/colors";

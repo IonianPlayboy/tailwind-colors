@@ -9,7 +9,7 @@
 			v-if="editable"
 			v-bind="{ hexCode, shadeNumber }"
 			class="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4"
-			@buttonClicked="$emit('colorEdited')"
+			@buttonClicked="$emit('shadeEdited')"
 		/>
 	</section>
 </template>
@@ -30,5 +30,5 @@ const props = defineProps<{
 	editable?: boolean;
 }>();
 
-defineEmit<(event: "colorEdited") => void>();
+defineEmit<(event: "shadeEdited") => void>();
 </script>
