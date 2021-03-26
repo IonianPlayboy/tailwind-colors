@@ -9,7 +9,7 @@
 			{{ formatColorKey(currColor) }}
 		</main-title>
 		<router-link
-			class="mt-4 text-warm-gray-100 inline-block text-xl"
+			class="inline-block mt-4 text-xl text-warm-gray-100"
 			to="/"
 		>
 			&lt; Go back
@@ -29,8 +29,8 @@
 				<custom-color
 					no-start-button
 					:color-name="currColor"
-					:hex-code="currValue"
-					:shade-number="Number(currKey)"
+					:hex-code="currValue.hexCode"
+					:shade-number="currValue.shadeNumber"
 					:shades-list="currShades"
 					@colorValidated="editShadeFromColor($event)"
 				/>
@@ -63,13 +63,21 @@ import { useCustomColors } from "@/hooks";
 
 const currRoute = useRoute();
 ref: currColor = computed(() => currRoute.params.key as keyof typeof colors);
+const {
+	customColors,
+	customShadesInfos,
+	addCustomShade,
+	editShadeFromColor,
+} = useCustomColors();
 ref: currShades = computed(
-	() => colors[currColor] as Record<string | number, string>
+	() =>
+		colors[currColor] ??
+		(customColors.value[currColor] as Record<string | number, string>)
 );
 
-const { customColors, addCustomShade, editShadeFromColor } = useCustomColors();
-
-ref: customShades = computed(() => customColors.value[currColor]);
+ref: customShades = computed(() =>
+	customShadesInfos.value.filter(({ colorName }) => colorName === currColor)
+);
 </script>
 <style scoped>
 button {

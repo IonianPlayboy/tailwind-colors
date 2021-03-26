@@ -13,52 +13,54 @@
 				Generate a custom shade for one of the base colors
 			</custom-color>
 			<button
+				v-if="state === 'inactive'"
 				class="px-4 py-6 text-lg font-bold border rounded shadow-md font-display bg-warm-gray-700 border-true-gray-800 md:text-xl"
-				@click="wipText = 'Coming soon™. :)'"
+				@click="state = 'choosing'"
 			>
-				{{ wipText }}
+				Generate all shades for a given color
 			</button>
+			<div v-if="state === 'choosing'">
+				<label for="colorName"> Color name : </label>
+				<input
+					id="colorName"
+					v-model="colorName"
+					class="text-sm rounded shadow-md md:text-lg sm:text-base border-warm-gray-800 bg-warm-gray-700"
+					name="colorName"
+					type="text"
+				/>
+				<label for="hexCode"> Hex code : </label>
+				<input
+					id="hexCode"
+					v-model="hexCode"
+					class="text-sm rounded shadow-md md:text-lg sm:text-base border-warm-gray-800 bg-warm-gray-700"
+					name="hexCode"
+					type="text"
+				/>
+				<validate-button
+					:shade-number="900"
+					v-bind="{ hexCode }"
+					@buttonClicked="customColorAdded()"
+				/>
+			</div>
 		</section>
 		<h3
-			v-if="customColorsInfos.length"
+			v-if="customShadesInfos.length"
 			class="mt-8 text-lg font-body text-warm-gray-300 md:text-xl"
 		>
 			Your custom shades :
 		</h3>
 		<colors-list
-			v-if="customColorsInfos.length"
+			v-if="customShadesInfos.length"
 			wide
-			:colors-list="customColorsInfos"
+			:colors-list="customShadesInfos"
 		>
 			<template #default="{ currValue }">
 				<color-item v-bind="currValue" />
 			</template>
 		</colors-list>
-		<ul v-if="baseColor" class="flex items-center">
+		<!-- <ul v-if="baseColor" class="flex items-center">
 			<li
 				v-for="({ hexCode, rgb }, shadeNumber) in baseColor"
-				:key="`base${hexCode}${shadeNumber}`"
-				class="h-20 w-45"
-				:class="{
-					'text-warm-gray-50': shadeNumber >= 400,
-					'text-warm-gray-800': shadeNumber < 400,
-				}"
-				:style="{ backgroundColor: hexCode }"
-			>
-				{{ shadeNumber }}
-				<br />
-				{{ hexCode }}
-				<br />
-				<div>
-					<span v-for="(value, key) in rgb" :key="`base${key}`">
-						{{ key.charAt(0) }}{{ value }}
-					</span>
-				</div>
-			</li>
-		</ul>
-		<ul v-if="testColor" class="flex items-center">
-			<li
-				v-for="({ hexCode, rgb }, shadeNumber) in testColor"
 				:key="`base${hexCode}${shadeNumber}`"
 				class="h-20 w-45"
 				:class="{
@@ -99,7 +101,7 @@
 					</span>
 				</div>
 			</li>
-		</ul>
+		</ul> -->
 	</layout>
 </template>
 
@@ -113,53 +115,44 @@ import DefaultColorsList from "@/components/organisms/DefaultColorsList.vue";
 import ColorsList from "@/components/molecules/ColorsList.vue";
 import ColorItem from "@/components/organisms/ColorItem.vue";
 import CustomColor from "@/components/organisms/CustomColor.vue";
+import ValidateButton from "@/components/molecules/ValidateButton.vue";
 
 import { useCustomColors } from "@/hooks";
-import {
-	generateShadesForColor,
-	getClosestDefaultColor,
-	getGapsBetweenBasicShades,
-} from "@/utils";
+import { generateShadesForColor } from "@/utils";
+import { watchEffect } from "vue";
+import { useRouter } from "vue-router";
 
-console.log(colors);
+ref: state = "inactive" as "inactive" | "choosing";
+ref: colorName = "";
+ref: hexCode = "";
 
-console.log(getGapsBetweenBasicShades());
+const generatedColor = generateShadesForColor("#974875");
 
-console.log(getClosestDefaultColor("#c9e6a2"));
-// console.log(getClosestDefaultColor("#fbbf24"));
-// console.log(generateShadesForColor("#fbbf24"));
-// console.log(colors.amber);
+const {
+	addedColorsNames,
+	customColors,
+	customShadesInfos,
+	addCustomShade,
+	addCustomColor,
+} = useCustomColors();
 
-// const baseColor = getGapsBetweenBasicShades().pink;
-// const testColor = getGapsBetweenBasicShades().yellow;
-const generatedColor = generateShadesForColor("#c9e6a2");
-// console.log(baseColor);
-console.log(generatedColor);
+watchEffect(() => console.log(addedColorsNames.value, customColors.value));
 
-// console.log(
-// 	(Object.entries(baseColor[400].rgb) as Array<[string, number]>).reduce(
-// 		(res, [key, value]) => ({
-// 			...res,
-// 			[key]: Math.max(
-// 				Math.min(
-// 					Math.round(
-// 						value +
-// 							(baseColor[400].toNext
-// 								? baseColor[400].toNext[key]
-// 								: 0)
-// 					),
-// 					255
-// 				),
-// 				0
-// 			),
-// 		}),
-// 		{}
-// 	)
-// );
+const router = useRouter();
 
-const { customColorsInfos, addCustomShade } = useCustomColors();
-
-ref: wipText = "Generate all shades for a given color";
+const customColorAdded = () => {
+	const generatedShades = generateShadesForColor(hexCode);
+	const shadesList = Object.entries(generatedShades).reduce(
+		(result, [shadeNumber, { hexCode }]) => ({
+			...result,
+			[shadeNumber]: hexCode,
+		}),
+		{} as Record<number, string>
+	);
+	console.log(colorName, hexCode, shadesList);
+	addCustomColor(colorName, hexCode, shadesList);
+	router.push(`/color/${colorName}`);
+};
 </script>
 <style scoped>
 button {

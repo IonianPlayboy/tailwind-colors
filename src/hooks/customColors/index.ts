@@ -9,13 +9,15 @@ const customColors = ref(
 	)
 );
 
+const addedColorsNames = ref({} as Record<string, string>);
+
 interface ColorInfos {
 	colorName: string;
 	shadeNumber: number;
 	hexCode: string;
 }
 
-const customColorsInfos = computed(() =>
+const customShadesInfos = computed(() =>
 	Object.entries(customColors.value)
 		.reduce(
 			(result, [colorName, value]) => [
@@ -29,6 +31,10 @@ const customColorsInfos = computed(() =>
 			[] as Array<ColorInfos>
 		)
 		.flat()
+		.filter(
+			({ colorName }) =>
+				!Object.keys(addedColorsNames.value).includes(colorName)
+		)
 		.sort((a, b) => a.colorName.localeCompare(b.colorName))
 );
 
@@ -66,10 +72,21 @@ const editShadeFromColor = ({
 	addCustomShade({ colorName, shadeNumber, hexCode });
 };
 
+const addCustomColor = (
+	colorName: string,
+	hexCode: string,
+	shadesList: Record<number, string>
+) => {
+	addedColorsNames.value[colorName] = hexCode;
+	customColors.value[colorName] = shadesList;
+};
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const useCustomColors = () => ({
 	customColors,
-	customColorsInfos,
+	customShadesInfos,
+	addedColorsNames,
+	addCustomColor,
 	addCustomShade,
 	removeShadeFromColor,
 	editShadeFromColor,
