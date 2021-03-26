@@ -10,7 +10,7 @@
 	>
 		<slot />
 	</button>
-	<color-input
+	<shade-input
 		v-if="state === 'choosing'"
 		v-model="currInput"
 		:type="standalone ? 'text' : 'number'"
@@ -18,7 +18,7 @@
 		:shade-number="currShade ?? shadeNumber ?? 0"
 		@buttonClicked="colorWasValidated()"
 	/>
-	<color-item
+	<shade-item
 		v-if="shouldShowColorItem"
 		editable
 		:hex-code="standalone ? customColor : hexCode"
@@ -38,8 +38,8 @@ import {
 import colors from "windicss/colors";
 </script>
 <script setup lang="ts">
-import ColorItem from "@/components/organisms/ColorItem.vue";
-import ColorInput from "@/components/molecules/ColorInput.vue";
+import ShadeItem from "@/components/organisms/ShadeItem.vue";
+import ShadeInput from "@/components/molecules/ShadeInput.vue";
 
 const props = defineProps<{
 	colorName?: string;

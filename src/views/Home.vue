@@ -9,9 +9,9 @@
 			Create your own colors :
 		</h2>
 		<section class="grid grid-cols-2 gap-6 mt-6">
-			<custom-color standalone @colorValidated="addCustomShade($event)">
+			<custom-shade standalone @colorValidated="addCustomShade($event)">
 				Generate a custom shade for one of the base colors
-			</custom-color>
+			</custom-shade>
 			<button
 				v-if="state === 'inactive'"
 				class="px-4 py-6 text-lg font-bold border rounded shadow-md font-display bg-warm-gray-700 border-true-gray-800 md:text-xl"
@@ -49,15 +49,15 @@
 		>
 			Your custom shades :
 		</h3>
-		<colors-list
+		<shades-list
 			v-if="customShadesInfos.length"
 			wide
 			:colors-list="customShadesInfos"
 		>
 			<template #default="{ currValue }">
-				<color-item v-bind="currValue" />
+				<shade-item v-bind="currValue" />
 			</template>
-		</colors-list>
+		</shades-list>
 		<!-- <ul v-if="baseColor" class="flex items-center">
 			<li
 				v-for="({ hexCode, rgb }, shadeNumber) in baseColor"
@@ -112,9 +112,9 @@ import colors from "windicss/colors";
 import Layout from "@/components/atoms/Layout.vue";
 import MainTitle from "@/components/atoms/MainTitle.vue";
 import DefaultColorsList from "@/components/organisms/DefaultColorsList.vue";
-import ColorsList from "@/components/molecules/ColorsList.vue";
-import ColorItem from "@/components/organisms/ColorItem.vue";
-import CustomColor from "@/components/organisms/CustomColor.vue";
+import ShadesList from "@/components/molecules/ShadesList.vue";
+import ShadeItem from "@/components/organisms/ShadeItem.vue";
+import CustomShade from "@/components/organisms/CustomShade.vue";
 import ValidateButton from "@/components/molecules/ValidateButton.vue";
 
 import { useCustomColors } from "@/hooks";

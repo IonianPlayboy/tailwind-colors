@@ -14,19 +14,19 @@
 		>
 			&lt; Go back
 		</router-link>
-		<colors-list
+		<shades-list
 			wide
 			:colors-list="currShades"
 			:custom-colors="customShades"
 		>
 			<template #default="{ currKey, currValue }">
-				<color-item
+				<shade-item
 					:hex-code="currValue"
 					:shade-number="Number(currKey)"
 				/>
 			</template>
 			<template #custom="{ currKey, currValue }">
-				<custom-color
+				<custom-shade
 					no-start-button
 					:color-name="currColor"
 					:hex-code="currValue.hexCode"
@@ -36,15 +36,15 @@
 				/>
 			</template>
 			<template #last>
-				<custom-color
+				<custom-shade
 					:color-name="currColor"
 					:shades-list="currShades"
 					@colorValidated="addCustomShade($event)"
 				>
 					Create your own...
-				</custom-color>
+				</custom-shade>
 			</template>
-		</colors-list>
+		</shades-list>
 	</layout>
 </template>
 <script lang="ts">
@@ -54,9 +54,9 @@ import { computed } from "@vue/runtime-core";
 <script setup lang="ts">
 import Layout from "@/components/atoms/Layout.vue";
 import MainTitle from "@/components/atoms/MainTitle.vue";
-import ColorsList from "@/components/molecules/ColorsList.vue";
-import ColorItem from "@/components/organisms/ColorItem.vue";
-import CustomColor from "@/components/organisms/CustomColor.vue";
+import ShadesList from "@/components/molecules/ShadesList.vue";
+import ShadeItem from "@/components/organisms/ShadeItem.vue";
+import CustomShade from "@/components/organisms/CustomShade.vue";
 import colors from "windicss/colors";
 import { formatColorKey, getCurrTextShadow } from "@/utils";
 import { useCustomColors } from "@/hooks";

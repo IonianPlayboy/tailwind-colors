@@ -4,7 +4,7 @@
 			class="absolute top-2 left-2 sm:top-3 sm:left-3 md:top-4 md:left-4"
 			v-bind="{ shadeNumber, hexCode }"
 		/>
-		<color-display v-bind="{ colorName, shadeNumber, hexCode }" />
+		<shade-display v-bind="{ colorName, shadeNumber, hexCode }" />
 		<edit-button
 			v-if="editable"
 			v-bind="{ hexCode, shadeNumber }"
@@ -20,7 +20,7 @@ import { defineEmit, defineProps } from "@vue/runtime-core";
 
 <script setup lang="ts">
 import CopyButton from "@/components/molecules/CopyButton.vue";
-import ColorDisplay from "@/components/molecules/ColorDisplay.vue";
+import ShadeDisplay from "@/components/molecules/ShadeDisplay.vue";
 import EditButton from "@/components/molecules/EditButton.vue";
 
 const props = defineProps<{
