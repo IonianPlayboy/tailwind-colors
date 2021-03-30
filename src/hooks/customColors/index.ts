@@ -9,7 +9,15 @@ const customColors = ref(
 	)
 );
 
-const addedColorsNames = ref({} as Record<string, string>);
+const addedColorsNames = ref(
+	{} as Record<
+		string,
+		{
+			shadeNumber: number;
+			hexCode: string;
+		}
+	>
+);
 
 interface ColorInfos {
 	colorName: string;
@@ -77,7 +85,15 @@ const addCustomColor = (
 	hexCode: string,
 	shadesList: Record<number, string>
 ) => {
-	addedColorsNames.value[colorName] = hexCode;
+	addedColorsNames.value[colorName] = {
+		hexCode,
+		shadeNumber:
+			Number(
+				(Object.entries(shadesList).find(
+					([_currShade, currHex]) => currHex === hexCode
+				) ?? [])[0]
+			) ?? 0,
+	};
 	customColors.value[colorName] = shadesList;
 };
 

@@ -58,6 +58,47 @@
 				<shade-item v-bind="currValue" />
 			</template>
 		</list-display>
+		<h3
+			v-if="Object.keys(addedColorsNames).length"
+			class="mt-8 text-lg font-body text-warm-gray-300 md:text-xl"
+		>
+			Your custom colors :
+		</h3>
+		<list-display
+			v-if="Object.keys(addedColorsNames).length"
+			wide
+			:primary-list="addedColorsNames"
+		>
+			<template #default="{ currKey, currValue }">
+				<router-link
+					class="flex flex-col items-center justify-center flex-grow h-full space-y-1 border rounded shadow-lg border-warm-gray-700"
+					:style="{
+						backgroundColor: currValue.hexCode,
+						textShadow: getCurrTextShadow(currValue.shadeNumber),
+					}"
+					:to="`/color/${currKey}`"
+				>
+					<strong
+						class="text-xl font-bold md:text-3xl sm:text-2xl font-display"
+						:class="{
+							'text-warm-gray-50': currValue.shadeNumber >= 400,
+							'text-warm-gray-800': currValue.shadeNumber < 400,
+						}"
+					>
+						{{ currKey }}
+					</strong>
+					<span
+						class="text-base font-bold md:text-2xl sm:text-xl"
+						:class="{
+							'text-warm-gray-200': currValue.shadeNumber >= 400,
+							'text-warm-gray-700': currValue.shadeNumber < 400,
+						}"
+					>
+						{{ currValue.hexCode.toLowerCase() }}
+					</span>
+				</router-link>
+			</template>
+		</list-display>
 		<!-- <ul v-if="baseColor" class="flex items-center">
 			<li
 				v-for="({ hexCode, rgb }, shadeNumber) in baseColor"
@@ -116,6 +157,7 @@ import ListDisplay from "@/components/molecules/ListDisplay.vue";
 import ShadeItem from "@/components/organisms/ShadeItem.vue";
 import CustomShade from "@/components/organisms/CustomShade.vue";
 import ValidateButton from "@/components/molecules/ValidateButton.vue";
+import { getCurrTextShadow } from "@/utils";
 
 import { useCustomColors } from "@/hooks";
 import { generateShadesForColor } from "@/utils";
@@ -153,6 +195,8 @@ const customColorAdded = () => {
 	addCustomColor(colorName, hexCode, shadesList);
 	router.push(`/color/${colorName}`);
 };
+const goToCustomColor = (colorName: string) =>
+	router.push(`/color/${colorName}`);
 </script>
 <style scoped>
 button {
