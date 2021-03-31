@@ -9,50 +9,69 @@
 			Create your own colors :
 		</h2>
 		<section class="grid grid-cols-2 gap-6 mt-6">
-			<custom-color standalone @colorValidated="addCustomShade($event)">
+			<custom-shade standalone @shadeValidated="addCustomShade($event)">
 				Generate a custom shade for one of the base colors
-			</custom-color>
-			<button
-				class="px-4 py-6 text-lg font-bold border rounded shadow-md font-display bg-warm-gray-700 border-true-gray-800 md:text-xl"
-				@click="wipText = 'Coming soon™. :)'"
-			>
-				{{ wipText }}
-			</button>
+			</custom-shade>
+			<add-custom-color />
 		</section>
 		<h3
-			v-if="customColorsInfos.length"
+			v-if="customShadesInfos.length"
 			class="mt-8 text-lg font-body text-warm-gray-300 md:text-xl"
 		>
 			Your custom shades :
 		</h3>
-		<colors-list
-			v-if="customColorsInfos.length"
+		<list-display
+			v-if="customShadesInfos.length"
 			wide
-			:colors-list="customColorsInfos"
+			:primary-list="customShadesInfos"
 		>
 			<template #default="{ currValue }">
-				<color-item v-bind="currValue" />
+				<shade-item v-bind="currValue" />
 			</template>
-		</colors-list>
+		</list-display>
+		<h3
+			v-if="Object.keys(addedColorsNames).length"
+			class="mt-8 text-lg font-body text-warm-gray-300 md:text-xl"
+		>
+			Your custom colors :
+		</h3>
+		<list-display
+			v-if="Object.keys(addedColorsNames).length"
+			wide
+			:primary-list="addedColorsNames"
+		>
+			<template
+				#default="{ currKey, currValue: { shadeNumber, hexCode } }"
+			>
+				<custom-color-link
+					:color-name="currKey"
+					:hex-code="hexCode"
+					:shade-number="Number(shadeNumber)"
+				/>
+			</template>
+		</list-display>
 	</layout>
 </template>
 
-<script lang="ts">
-import colors from "windicss/colors";
-</script>
+<script lang="ts"></script>
 <script setup lang="ts">
 import Layout from "@/components/atoms/Layout.vue";
 import MainTitle from "@/components/atoms/MainTitle.vue";
 import DefaultColorsList from "@/components/organisms/DefaultColorsList.vue";
-import ColorsList from "@/components/molecules/ColorsList.vue";
-import ColorItem from "@/components/organisms/ColorItem.vue";
-import CustomColor from "@/components/organisms/CustomColor.vue";
+import ListDisplay from "@/components/molecules/ListDisplay.vue";
+import ShadeItem from "@/components/organisms/ShadeItem.vue";
+import CustomShade from "@/components/organisms/CustomShade.vue";
+import AddCustomColor from "@/components/organisms/AddCustomColor.vue";
+import CustomColorLink from "@/components/organisms/CustomColorLink.vue";
 
 import { useCustomColors } from "@/hooks";
 
-const { customColorsInfos, addCustomShade } = useCustomColors();
-
-ref: wipText = "Generate all shades for a given color";
+const {
+	addedColorsNames,
+	customShadesInfos,
+	addCustomShade,
+	addCustomColor,
+} = useCustomColors();
 </script>
 <style scoped>
 button {

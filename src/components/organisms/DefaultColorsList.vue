@@ -1,12 +1,12 @@
 <template>
-	<colors-list
+	<list-display
 		small-items
-		:colors-list="colorPalette"
-		:basic-colors="basicColors"
+		:primary-list="colorPalette"
+		:secondary-list="basicColors"
 	>
 		<template #default="{ currKey, currValue }">
 			<router-link
-				class="flex text-center p-2 items-center justify-center flex-grow rounded shadow-lg"
+				class="flex items-center justify-center flex-grow p-2 text-center rounded shadow-lg"
 				:style="{
 					backgroundColor: currValue[700],
 					textShadow: getCurrTextShadow(700),
@@ -16,7 +16,7 @@
 				{{ formatColorKey(currKey) }}
 			</router-link>
 		</template>
-		<template #basic="{ currKey, currValue }">
+		<template #secondary="{ currKey, currValue }">
 			<button
 				class="flex items-center justify-center flex-grow font-bold rounded"
 				:style="{
@@ -30,14 +30,14 @@
 				{{ formatColorKey(currKey) }}
 			</button>
 		</template>
-	</colors-list>
+	</list-display>
 </template>
 
 <script lang="ts">
 import colors from "windicss/colors";
 </script>
 <script setup lang="ts">
-import ColorsList from "@/components/molecules/ColorsList.vue";
+import ListDisplay from "@/components/molecules/ListDisplay.vue";
 import { formatColorKey, copyCurrValue, getCurrTextShadow } from "@/utils";
 
 const colorPalette = Object.entries(colors)

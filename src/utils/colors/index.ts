@@ -1,32 +1,41 @@
 import { Ref } from "vue";
 
 export type RGB = "red" | "green" | "blue";
-type RGBValues = [redValue: number, greenValue: number, blueValue: number];
+export type RGBValues = [
+	redValue: number,
+	greenValue: number,
+	blueValue: number
+];
 
-export const getValuesFromHexCode = (
-	currColor: string
-): Record<RGB, number> => ({
-	red: parseInt(currColor.substring(1, 3), 16),
-	green: parseInt(currColor.substring(3, 5), 16),
-	blue: parseInt(currColor.substring(5, 7), 16),
+export const convertHexCodeToRGB = (hexCode: string): Record<RGB, number> => ({
+	red: parseInt(hexCode.substring(1, 3), 16),
+	green: parseInt(hexCode.substring(3, 5), 16),
+	blue: parseInt(hexCode.substring(5, 7), 16),
 });
 
 const formatHexValue = (currValue: number) =>
 	`${currValue < 16 ? "0" : ""}${currValue.toString(16)}`;
 
-const formatHexColor = (red: number, green: number, blue: number) =>
+export const convertRGBToHexCode = (
+	red: number,
+	green: number,
+	blue: number
+): string =>
 	`#${formatHexValue(red)}${formatHexValue(green)}${formatHexValue(blue)}`;
 
 export const calculateRGBGap = (
 	baseHexCode: string,
 	otherHexCode: string
 ): Record<RGB, number> => {
-	const baseRGBValues = getValuesFromHexCode(baseHexCode);
-	const otherRBGValues = getValuesFromHexCode(otherHexCode);
+	const baseRGBValues = convertHexCodeToRGB(baseHexCode);
+	const otherRBGValues = convertHexCodeToRGB(otherHexCode);
 	return (Object.entries(baseRGBValues) as Array<[RGB, number]>).reduce(
 		(result, [key, value]) => ({
 			...result,
-			[key]: otherRBGValues[key] - value,
+			[key]: Math.max(
+				Math.min(Math.round(otherRBGValues[key] - value), 255),
+				-255
+			),
 		}),
 		{} as Record<RGB, number>
 	);
@@ -42,13 +51,13 @@ const calculateNewRGBValue = (
 		0
 	);
 
-const adjustColor = (
+const adjustShade = (
 	closestHexCode: string,
 	nearestHexCode: string,
 	amount: number
 ) => {
-	const closestValues = getValuesFromHexCode(closestHexCode);
-	const nearestValues = getValuesFromHexCode(nearestHexCode);
+	const closestValues = convertHexCodeToRGB(closestHexCode);
+	const nearestValues = convertHexCodeToRGB(nearestHexCode);
 	const adjustedValues = (Object.entries(closestValues) as Array<
 		[RGB, number]
 	>).map(([currKey, currValue]) => {
@@ -59,27 +68,29 @@ const adjustColor = (
 			Math.abs(amount)
 		);
 	}) as RGBValues;
-	return formatHexColor(...adjustedValues);
+	return convertRGBToHexCode(...adjustedValues);
 };
 
-export const getCustomColor = (
+export const getCustomShade = (
 	shadeNumber: number,
 	shadesList: Record<number, string>
 ): string => {
 	const foundShade = shadesList[shadeNumber];
 	if (foundShade) return foundShade;
-	const [closestShade, nearestShade] = findClosestShades(shadeNumber);
+	const [closestShadeNumber, nearestShadeNumber] = findClosestShadesNumbers(
+		shadeNumber
+	);
 	const nearestHexCode =
-		shadesList[nearestShade as number] ??
-		(shadeNumber > closestShade ? "#000000" : "#ffffff");
-	return adjustColor(
-		shadesList[closestShade],
+		shadesList[nearestShadeNumber as number] ??
+		(shadeNumber > closestShadeNumber ? "#000000" : "#ffffff");
+	return adjustShade(
+		shadesList[closestShadeNumber],
 		nearestHexCode,
-		closestShade - shadeNumber
+		closestShadeNumber - shadeNumber
 	);
 };
 
-const findClosestShades = (
+const findClosestShadesNumbers = (
 	currValue: number
 ): [ClosestShade: number, NearestShade: number | null] => {
 	if (currValue > 900) return [900, null];
