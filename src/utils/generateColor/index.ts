@@ -87,14 +87,13 @@ const getClosestShadeForColor = (
 			convertHexCodeToRGB(currColor),
 			gapInfos.rgb
 		);
-		// console.log(colorName, shadeNumber, currDistance, res);
-		return !res.hexCode || res.distance > currDistance
-			? {
+		return res.hexCode && res.distance <= currDistance
+			? res
+			: {
 					distance: currDistance,
 					shadeNumber,
 					hexCode: gapInfos.hexCode,
-			  }
-			: res;
+			  };
 	}, {} as ClosestShadeInfos);
 
 export const getClosestDefaultColor = (
@@ -107,100 +106,114 @@ export const getClosestDefaultColor = (
 				currColor,
 				shadesList
 			);
-			return !result.hexCode ||
-				nearestShadeData.distance < result.distance
-				? {
+			return result.hexCode &&
+				result.distance <= nearestShadeData.distance
+				? result
+				: {
 						...nearestShadeData,
 						colorName,
-				  }
-				: result;
+				  };
 		},
 		{} as ClosestColorInfos
 	);
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const generateShadesForColor = (currColor: string) => {
+type ShadesNumbersList = Readonly<
+	[50, 100, 200, 300, 400, 500, 600, 700, 800, 900]
+>;
+type PossibleShadeNumber = ShadesNumbersList[number];
+
+interface ShadeData {
+	hexCode: string;
+	rgb: { red: number; green: number; blue: number };
+}
+
+const calculateCurrRGBValue = (
+	currValue: number,
+	currKey: RGB,
+	RGBGap: Record<RGB, number> | null
+) =>
+	Math.max(
+		Math.min(Math.round(currValue + (RGBGap ? RGBGap[currKey] : 0)), 255),
+		0
+	);
+
+const generateShadesInOrder = (
+	startingShade: ShadeData & { shadeNumber: number },
+	shadesNumbersToGenerate: Array<PossibleShadeNumber>,
+	currentColorGaps: Record<number, RGBGapInfos>,
+	direction: "toNext" | "toPrevious"
+) =>
+	shadesNumbersToGenerate.reduce((result, shadeNumber, i, array) => {
+		const prevShade = array[i - 1];
+		const prevRGB = prevShade ? result[prevShade].rgb : startingShade.rgb;
+		const RGBGap =
+			currentColorGaps[prevShade ?? startingShade.shadeNumber][direction];
+		const rgb = (Object.entries(prevRGB) as Array<[RGB, number]>).reduce(
+			(res, [key, value]) => ({
+				...res,
+				[key]: calculateCurrRGBValue(value, key, RGBGap),
+			}),
+			{} as Record<RGB, number>
+		);
+		return {
+			...result,
+			[shadeNumber]: {
+				rgb,
+				hexCode: convertRGBToHexCode(
+					...(Object.values(rgb) as RGBValues)
+				),
+			},
+		};
+	}, {} as Record<PossibleShadeNumber, ShadeData>);
+
+export const generateShadesForColor = (
+	currColor: string
+): Record<PossibleShadeNumber, ShadeData> => {
 	const defaultColorsGaps = getGapsBetweenBasicShades();
 	const closestDefaultColor = getClosestDefaultColor(currColor);
 	const colorName = closestDefaultColor.colorName;
-	const result = {
-		50: { hexCode: "", rgb: { red: 0, green: 0, blue: 0 } },
-		100: { hexCode: "", rgb: { red: 0, green: 0, blue: 0 } },
-		200: { hexCode: "", rgb: { red: 0, green: 0, blue: 0 } },
-		300: { hexCode: "", rgb: { red: 0, green: 0, blue: 0 } },
-		400: { hexCode: "", rgb: { red: 0, green: 0, blue: 0 } },
-		500: { hexCode: "", rgb: { red: 0, green: 0, blue: 0 } },
-		600: { hexCode: "", rgb: { red: 0, green: 0, blue: 0 } },
-		700: { hexCode: "", rgb: { red: 0, green: 0, blue: 0 } },
-		800: { hexCode: "", rgb: { red: 0, green: 0, blue: 0 } },
-		900: { hexCode: "", rgb: { red: 0, green: 0, blue: 0 } },
-	};
-	const startingShade = closestDefaultColor.shadeNumber as keyof typeof result;
-	result[startingShade].hexCode = currColor;
-	result[startingShade].rgb = convertHexCodeToRGB(currColor);
-	const upperShades = ((Object.keys(result) as unknown) as Array<
-		keyof typeof result
-	>).filter((key) => Number(key) > startingShade);
-	const lowerShades = ((Object.keys(result) as unknown) as Array<
-		keyof typeof result
-	>)
-		.filter((key) => Number(key) < startingShade)
+	const shadesNumberList: ShadesNumbersList = [
+		50,
+		100,
+		200,
+		300,
+		400,
+		500,
+		600,
+		700,
+		800,
+		900,
+	];
+	const startingShadeNumber = closestDefaultColor.shadeNumber as PossibleShadeNumber;
+	const upperShadesNumbers = shadesNumberList.filter(
+		(shade) => shade > startingShadeNumber
+	);
+	const lowerShadesNumbers = shadesNumberList
+		.filter((shade) => shade < startingShadeNumber)
 		.reverse();
-	upperShades.forEach((shade, i) => {
-		const prevShade = i ? upperShades[i - 1] : startingShade;
-		const currGap = defaultColorsGaps[colorName][prevShade];
-		const prevRGB = convertHexCodeToRGB(result[prevShade].hexCode);
-		result[shade].rgb = (Object.entries(prevRGB) as Array<
-			[RGB, number]
-		>).reduce(
-			(res, [key, value]) => ({
-				...res,
-				[key]: Math.max(
-					Math.min(
-						Math.round(
-							value + (currGap.toNext ? currGap.toNext[key] : 0)
-						),
-						255
-					),
-					0
-				),
-			}),
-			{} as Record<RGB, number>
-		);
-		console.log("upper", shade, result[shade].rgb);
-		result[shade].hexCode = convertRGBToHexCode(
-			...(Object.values(result[shade].rgb) as RGBValues)
-		);
-	});
-	lowerShades.forEach((shade, i) => {
-		const prevShade = i ? lowerShades[i - 1] : startingShade;
-		const currGap = defaultColorsGaps[colorName][prevShade];
-		const prevRGB = convertHexCodeToRGB(result[prevShade].hexCode);
-		result[shade].rgb = (Object.entries(prevRGB) as Array<
-			[RGB, number]
-		>).reduce(
-			(res, [key, value]) => ({
-				...res,
-				[key]: Math.max(
-					Math.min(
-						Math.round(
-							value +
-								(currGap.toPrevious
-									? currGap.toPrevious[key]
-									: 0)
-						),
-						255
-					),
-					0
-				),
-			}),
-			{} as Record<RGB, number>
-		);
-		console.log("lower", shade, result[shade].rgb);
-		result[shade].hexCode = convertRGBToHexCode(
-			...(Object.values(result[shade].rgb) as RGBValues)
-		);
-	});
-	return result;
+	const startingShade = {
+		shadeNumber: startingShadeNumber,
+		hexCode: currColor,
+	};
+	const startingShadeInfos = {
+		...startingShade,
+		rgb: convertHexCodeToRGB(currColor),
+	};
+	const currentColorGaps = defaultColorsGaps[colorName];
+	return {
+		...generateShadesInOrder(
+			startingShadeInfos,
+			upperShadesNumbers,
+			currentColorGaps,
+			"toNext"
+		),
+		...generateShadesInOrder(
+			startingShadeInfos,
+			lowerShadesNumbers,
+			currentColorGaps,
+			"toPrevious"
+		),
+		[startingShadeNumber]: startingShade,
+	};
 };
