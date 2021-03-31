@@ -12,36 +12,7 @@
 			<custom-shade standalone @shadeValidated="addCustomShade($event)">
 				Generate a custom shade for one of the base colors
 			</custom-shade>
-			<button
-				v-if="state === 'inactive'"
-				class="px-4 py-6 text-lg font-bold border rounded shadow-md font-display bg-warm-gray-700 border-true-gray-800 md:text-xl"
-				@click="state = 'choosing'"
-			>
-				Generate all shades for a given color
-			</button>
-			<div v-if="state === 'choosing'">
-				<label for="colorName"> Color name : </label>
-				<input
-					id="colorName"
-					v-model="colorName"
-					class="text-sm rounded shadow-md md:text-lg sm:text-base border-warm-gray-800 bg-warm-gray-700"
-					name="colorName"
-					type="text"
-				/>
-				<label for="hexCode"> Hex code : </label>
-				<input
-					id="hexCode"
-					v-model="hexCode"
-					class="text-sm rounded shadow-md md:text-lg sm:text-base border-warm-gray-800 bg-warm-gray-700"
-					name="hexCode"
-					type="text"
-				/>
-				<validate-button
-					:shade-number="900"
-					v-bind="{ hexCode }"
-					@buttonClicked="customColorAdded()"
-				/>
-			</div>
+			<add-custom-color />
 		</section>
 		<h3
 			v-if="customShadesInfos.length"
@@ -69,86 +40,20 @@
 			wide
 			:primary-list="addedColorsNames"
 		>
-			<template #default="{ currKey, currValue }">
-				<router-link
-					class="flex flex-col items-center justify-center flex-grow h-full space-y-1 border rounded shadow-lg border-warm-gray-700"
-					:style="{
-						backgroundColor: currValue.hexCode,
-						textShadow: getCurrTextShadow(currValue.shadeNumber),
-					}"
-					:to="`/color/${currKey}`"
-				>
-					<strong
-						class="text-xl font-bold md:text-3xl sm:text-2xl font-display"
-						:class="{
-							'text-warm-gray-50': currValue.shadeNumber >= 400,
-							'text-warm-gray-800': currValue.shadeNumber < 400,
-						}"
-					>
-						{{ currKey }}
-					</strong>
-					<span
-						class="text-base font-bold md:text-2xl sm:text-xl"
-						:class="{
-							'text-warm-gray-200': currValue.shadeNumber >= 400,
-							'text-warm-gray-700': currValue.shadeNumber < 400,
-						}"
-					>
-						{{ currValue.hexCode.toLowerCase() }}
-					</span>
-				</router-link>
+			<template
+				#default="{ currKey, currValue: { shadeNumber, hexCode } }"
+			>
+				<custom-color-link
+					:color-name="currKey"
+					:hex-code="hexCode"
+					:shade-number="Number(shadeNumber)"
+				/>
 			</template>
 		</list-display>
-		<!-- <ul v-if="baseColor" class="flex items-center">
-			<li
-				v-for="({ hexCode, rgb }, shadeNumber) in baseColor"
-				:key="`base${hexCode}${shadeNumber}`"
-				class="h-20 w-45"
-				:class="{
-					'text-warm-gray-50': shadeNumber >= 400,
-					'text-warm-gray-800': shadeNumber < 400,
-				}"
-				:style="{ backgroundColor: hexCode }"
-			>
-				{{ shadeNumber }}
-				<br />
-				{{ hexCode }}
-				<br />
-				<div>
-					<span v-for="(value, key) in rgb" :key="`base${key}`">
-						{{ key.charAt(0) }}{{ value }}
-					</span>
-				</div>
-			</li>
-		</ul>
-		<ul class="flex items-center">
-			<li
-				v-for="({ hexCode, rgb }, shadeNumber) in generatedColor"
-				:key="`generated${hexCode}${shadeNumber}`"
-				class="h-20 w-30"
-				:class="{
-					'text-warm-gray-50': shadeNumber >= 400,
-					'text-warm-gray-800': shadeNumber < 400,
-				}"
-				:style="{ backgroundColor: hexCode }"
-			>
-				{{ shadeNumber }}
-				<br />
-				{{ hexCode }}
-				<br />
-				<div>
-					<span v-for="(value, key) in rgb" :key="`generated${key}`">
-						{{ key.charAt(0) }}{{ value }}
-					</span>
-				</div>
-			</li>
-		</ul> -->
 	</layout>
 </template>
 
-<script lang="ts">
-import colors from "windicss/colors";
-</script>
+<script lang="ts"></script>
 <script setup lang="ts">
 import Layout from "@/components/atoms/Layout.vue";
 import MainTitle from "@/components/atoms/MainTitle.vue";
@@ -156,47 +61,17 @@ import DefaultColorsList from "@/components/organisms/DefaultColorsList.vue";
 import ListDisplay from "@/components/molecules/ListDisplay.vue";
 import ShadeItem from "@/components/organisms/ShadeItem.vue";
 import CustomShade from "@/components/organisms/CustomShade.vue";
-import ValidateButton from "@/components/molecules/ValidateButton.vue";
-import { getCurrTextShadow } from "@/utils";
+import AddCustomColor from "@/components/organisms/AddCustomColor.vue";
+import CustomColorLink from "@/components/organisms/CustomColorLink.vue";
 
 import { useCustomColors } from "@/hooks";
-import { generateShadesForColor } from "@/utils";
-import { watchEffect } from "vue";
-import { useRouter } from "vue-router";
-
-ref: state = "inactive" as "inactive" | "choosing";
-ref: colorName = "";
-ref: hexCode = "";
-
-const generatedColor = generateShadesForColor("#974875");
 
 const {
 	addedColorsNames,
-	customColors,
 	customShadesInfos,
 	addCustomShade,
 	addCustomColor,
 } = useCustomColors();
-
-watchEffect(() => console.log(addedColorsNames.value, customColors.value));
-
-const router = useRouter();
-
-const customColorAdded = () => {
-	const generatedShades = generateShadesForColor(hexCode);
-	const shadesList = Object.entries(generatedShades).reduce(
-		(result, [shadeNumber, { hexCode }]) => ({
-			...result,
-			[shadeNumber]: hexCode,
-		}),
-		{} as Record<number, string>
-	);
-	console.log(colorName, hexCode, shadesList);
-	addCustomColor(colorName, hexCode, shadesList);
-	router.push(`/color/${colorName}`);
-};
-const goToCustomColor = (colorName: string) =>
-	router.push(`/color/${colorName}`);
 </script>
 <style scoped>
 button {
