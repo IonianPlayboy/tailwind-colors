@@ -13,7 +13,7 @@ export const copyCurrValue = async (
 	shadeNumber: number
 ): Promise<void> => {
 	try {
-		navigator.clipboard.writeText(currValue);
+		await navigator.clipboard.writeText(currValue);
 		addAlertToList({
 			event: "colorCopied",
 			hexCode: currValue,
