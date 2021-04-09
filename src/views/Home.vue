@@ -27,6 +27,19 @@
 		>
 			<template #default="{ currValue }">
 				<shade-item v-bind="currValue" />
+				<icon-button
+					class="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4"
+					:curr-title="'Delete the custom shade'"
+					:curr-icon="'cross'"
+					v-bind="currValue"
+					extra-thin-border
+					@click="
+						removeShadeFromColor(
+							currValue.colorName,
+							currValue.shadeNumber
+						)
+					"
+				/>
 			</template>
 		</list-display>
 		<h3
@@ -48,6 +61,14 @@
 					:hex-code="hexCode"
 					:shade-number="Number(shadeNumber)"
 				/>
+				<icon-button
+					class="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4"
+					:curr-title="'Delete the custom color'"
+					:curr-icon="'cross'"
+					v-bind="{ shadeNumber, hexCode }"
+					extra-thin-border
+					@click="removeCustomColor(currKey)"
+				/>
 			</template>
 		</list-display>
 	</layout>
@@ -63,6 +84,7 @@ import ShadeItem from "@/components/organisms/ShadeItem.vue";
 import CustomShade from "@/components/organisms/CustomShade.vue";
 import AddCustomColor from "@/components/organisms/AddCustomColor.vue";
 import CustomColorLink from "@/components/organisms/CustomColorLink.vue";
+import IconButton from "@/components/atoms/IconButton.vue";
 
 import { useCustomColors } from "@/hooks";
 
@@ -70,7 +92,9 @@ const {
 	addedColorsNames,
 	customShadesInfos,
 	addCustomShade,
+	removeShadeFromColor,
 	addCustomColor,
+	removeCustomColor,
 } = useCustomColors();
 </script>
 <style scoped>
