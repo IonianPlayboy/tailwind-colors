@@ -1,9 +1,9 @@
 <template>
 	<button
-		class="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7"
 		:class="{
 			'w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9': big,
 			'w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7': !big,
+			'pb-0.1': extraThinBorder,
 		}"
 		:title="currTitle"
 		@click="$emit('buttonClicked')"
@@ -15,8 +15,9 @@
 			:class="{
 				'text-warm-gray-200': shadeNumber >= 400,
 				'text-warm-gray-700': shadeNumber < 400,
-				'stroke-12': !thinBorder,
+				'stroke-12': !extraThinBorder && !thinBorder,
 				'stroke-4': thinBorder,
+				'stroke-0.5': extraThinBorder,
 			}"
 			:style="{
 				stroke:
@@ -50,6 +51,7 @@ const props = defineProps<{
 	hexCode: string;
 	shadeNumber: number;
 	thinBorder?: boolean;
+	extraThinBorder?: boolean;
 	big?: boolean;
 }>();
 
@@ -61,3 +63,8 @@ const getCurrBoxShadow = (shadeNumber: number) => {
 	)})`;
 };
 </script>
+<style>
+.stroke-0\.5 {
+	stroke-width: 0.5;
+}
+</style>

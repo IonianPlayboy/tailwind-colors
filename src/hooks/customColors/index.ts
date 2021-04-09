@@ -1,23 +1,48 @@
 import { ref } from "@vue/reactivity";
-import { computed } from "vue";
+import { computed, watchEffect } from "vue";
 import colors from "windicss/colors";
 
 const customColors = ref(
-	Object.keys(colors).reduce(
-		(result, key) => ({ ...result, [key]: {} }),
-		{} as Record<string, Record<number, string>>
-	)
+	localStorage.getItem("customColors")
+		? (JSON.parse(localStorage.getItem("customColors") || "{}") as Record<
+				string,
+				Record<number, string>
+		  >)
+		: Object.keys(colors).reduce(
+				(result, key) => ({ ...result, [key]: {} }),
+				{} as Record<string, Record<number, string>>
+		  )
 );
 
 const addedColorsNames = ref(
-	{} as Record<
-		string,
-		{
-			shadeNumber: number;
-			hexCode: string;
-		}
-	>
+	localStorage.getItem("addedColorsNames")
+		? (JSON.parse(
+				localStorage.getItem("addedColorsNames") || "{}"
+		  ) as Record<
+				string,
+				{
+					shadeNumber: number;
+					hexCode: string;
+				}
+		  >)
+		: ({} as Record<
+				string,
+				{
+					shadeNumber: number;
+					hexCode: string;
+				}
+		  >)
 );
+
+watchEffect(() => {
+	localStorage.setItem("customColors", JSON.stringify(customColors.value));
+});
+watchEffect(() => {
+	localStorage.setItem(
+		"addedColorsNames",
+		JSON.stringify(addedColorsNames.value)
+	);
+});
 
 interface ColorInfos {
 	colorName: string;
@@ -97,6 +122,20 @@ const addCustomColor = (
 	customColors.value[colorName] = shadesList;
 };
 
+const removeCustomColor = (colorName: string) => {
+	const {
+		[colorName]: colorToRemove,
+		...restOfAddedColorsNames
+	} = addedColorsNames.value;
+	addedColorsNames.value = restOfAddedColorsNames;
+
+	const {
+		[colorName]: shadesToRemove,
+		...restOfCustomColors
+	} = customColors.value;
+	customColors.value = restOfCustomColors;
+};
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const useCustomColors = () => ({
 	customColors,
@@ -106,4 +145,5 @@ export const useCustomColors = () => ({
 	addCustomShade,
 	removeShadeFromColor,
 	editShadeFromColor,
+	removeCustomColor,
 });
