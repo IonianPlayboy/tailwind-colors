@@ -5,12 +5,20 @@
 			v-bind="{ shadeNumber, hexCode }"
 		/>
 		<save-button
+			v-if="!noSave"
 			class="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 md:bottom-4 md:left-4"
 			v-bind="{ shadeNumber, hexCode }"
 			thin-border
 			@click="saveShade()"
 		/>
-		<shade-display v-bind="{ colorName, shadeNumber, hexCode }" />
+		<shade-display
+			v-bind="{
+				colorName,
+				shadeNumber,
+				hexCode,
+				hideColorName,
+			}"
+		/>
 		<edit-button
 			v-if="editable"
 			v-bind="{ hexCode, shadeNumber }"
@@ -36,6 +44,8 @@ const props = defineProps<{
 	colorName?: string;
 	shadeNumber: number;
 	hexCode: string;
+	hideColorName?: boolean;
+	noSave?: boolean;
 	editable?: boolean;
 }>();
 

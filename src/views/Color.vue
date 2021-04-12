@@ -21,8 +21,10 @@
 		>
 			<template #default="{ currKey, currValue }">
 				<shade-item
+					:color-name="currColor"
 					:hex-code="currValue"
 					:shade-number="Number(currKey)"
+					hide-color-name
 				/>
 			</template>
 			<template #secondary="{ currKey, currValue }">

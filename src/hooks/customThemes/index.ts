@@ -18,7 +18,7 @@ const customThemes = ref({
 				customName: string | null;
 			}
 		>;
-		colors: Record<number, string>;
+		colors: Record<number, { shadeNumber: number; hexCode: string }>;
 	}
 >);
 
@@ -72,6 +72,26 @@ const changeThemeForShade = (
 	if (!shadeData) return;
 	addShadeToTheme(shadeData, newTheme);
 };
+const addColorToTheme = (
+	{
+		colorName,
+		shadeNumber,
+		hexCode,
+	}: {
+		colorName: string;
+		shadeNumber: number;
+		hexCode: string;
+	},
+	themeName = "default"
+) => {
+	customThemes.value[themeName].colors = {
+		...(customThemes.value[themeName]?.colors ?? {}),
+		[colorName]: {
+			shadeNumber,
+			hexCode,
+		},
+	};
+};
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const useCustomThemes = () => ({
@@ -80,4 +100,5 @@ export const useCustomThemes = () => ({
 	editShadeNameFromTheme,
 	changeThemeForShade,
 	removeShadeFromTheme,
+	addColorToTheme,
 });
