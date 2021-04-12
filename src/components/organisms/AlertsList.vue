@@ -25,6 +25,14 @@
 				/>
 				was copied !
 			</template>
+			<template v-if="event === 'colorSaved'">
+				The color
+				<hexcode-display
+					:shade-number="shadeNumber"
+					:hex-code="hexCode"
+				/>
+				was saved to be used in custom themes !
+			</template>
 		</alert-item>
 	</transition-group>
 </template>

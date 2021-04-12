@@ -87,6 +87,7 @@ import CustomColorLink from "@/components/organisms/CustomColorLink.vue";
 import IconButton from "@/components/atoms/IconButton.vue";
 
 import { useCustomColors } from "@/hooks";
+import { useCustomThemes } from "@/hooks/customThemes";
 
 const {
 	addedColorsNames,
@@ -96,6 +97,8 @@ const {
 	addCustomColor,
 	removeCustomColor,
 } = useCustomColors();
+
+const { customThemes } = useCustomThemes();
 </script>
 <style scoped>
 button {

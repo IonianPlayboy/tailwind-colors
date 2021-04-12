@@ -7,6 +7,11 @@ type AlertInfos =
 			content: string;
 	  }
 	| {
+			event: "colorSaved";
+			hexCode: string;
+			shadeNumber: number;
+	  }
+	| {
 			event: "colorCopied";
 			hexCode: string;
 			shadeNumber: number;
