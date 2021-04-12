@@ -1,4 +1,5 @@
 import { ref } from "@vue/reactivity";
+import { computed } from "vue";
 
 type AlertInfos =
 	| {
@@ -16,6 +17,10 @@ type Alert = { id: number } & AlertInfos;
 let alertID = 0;
 
 const alertsList = ref<Record<number, Alert>>({});
+const currAlerts = computed(() =>
+	Object.values(alertsList.value).sort((a, b) => b.id - a.id)
+);
+
 const addAlertToList = (alertParams: AlertInfos) => {
 	const currID = alertID++;
 	alertsList.value = {
@@ -34,6 +39,7 @@ const removeAlertFromList = (alertID: number) => {
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const useAlerts = () => ({
 	alertsList,
+	currAlerts,
 	addAlertToList,
 	removeAlertFromList,
 });

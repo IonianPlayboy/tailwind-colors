@@ -6,7 +6,7 @@
 <script lang="ts"></script>
 
 <script setup lang="ts">
-import AlertsList from "@/components/AlertsList.vue";
+import AlertsList from "@/components/organisms/AlertsList.vue";
 </script>
 
 <style>
