@@ -22,7 +22,6 @@
 			:hex-code="hexCode ?? ''"
 			:shade-number="shadeNumber ?? 0"
 			class="relative"
-			@buttonClicked="$emit('buttonClicked')"
 		/>
 	</section>
 </template>

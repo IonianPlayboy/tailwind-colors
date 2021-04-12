@@ -6,7 +6,6 @@
 			'pb-0.1': extraThinBorder,
 		}"
 		:title="currTitle"
-		@click="$emit('buttonClicked')"
 	>
 		<component
 			:is="currIconComponent"

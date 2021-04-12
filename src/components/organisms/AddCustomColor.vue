@@ -36,7 +36,7 @@
 			class="m-auto"
 			:shade-number="900"
 			v-bind="{ hexCode }"
-			@buttonClicked="customColorAdded()"
+			@click="customColorAdded()"
 		/>
 	</div>
 </template>

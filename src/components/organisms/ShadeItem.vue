@@ -9,7 +9,7 @@
 			v-if="editable"
 			v-bind="{ hexCode, shadeNumber }"
 			class="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4"
-			@buttonClicked="$emit('shadeEdited')"
+			@click="$emit('shadeEdited')"
 		/>
 	</section>
 </template>

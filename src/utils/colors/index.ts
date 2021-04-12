@@ -1,5 +1,3 @@
-import { Ref } from "vue";
-
 export type RGB = "red" | "green" | "blue";
 export type RGBValues = [
 	redValue: number,

@@ -16,7 +16,7 @@
 		:type="standalone ? 'text' : 'number'"
 		:hex-code="customHexCode ?? baseHexCode ?? ''"
 		:shade-number="currShade ?? shadeNumber ?? 0"
-		@buttonClicked="shadeWasValidated()"
+		@click="shadeWasValidated()"
 	/>
 	<shade-item
 		v-if="shouldShowColorItem"
