@@ -3,7 +3,6 @@
 		:curr-title="'Edit the color shade number'"
 		:curr-icon="'edit'"
 		v-bind="{ hexCode, shadeNumber }"
-		@buttonClicked="$emit('buttonClicked')"
 	/>
 </template>
 

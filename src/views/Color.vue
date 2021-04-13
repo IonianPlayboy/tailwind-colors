@@ -21,17 +21,20 @@
 		>
 			<template #default="{ currKey, currValue }">
 				<shade-item
+					:color-name="currColor"
 					:hex-code="currValue"
 					:shade-number="Number(currKey)"
+					hide-color-name
 				/>
 			</template>
-			<template #secondary="{ currKey, currValue }">
+			<template #secondary="{ currValue: { hexCode, shadeNumber } }">
 				<custom-shade
 					no-start-button
 					:color-name="currColor"
-					:base-hex-code="currValue.hexCode"
-					:shade-number="currValue.shadeNumber"
+					:base-hex-code="hexCode"
+					:shade-number="shadeNumber"
 					:shades-list="currShades"
+					hide-color-name
 					@shadeValidated="editShadeFromColor($event)"
 				/>
 			</template>
@@ -63,20 +66,20 @@ import { useCustomColors } from "@/hooks";
 
 const currRoute = useRoute();
 ref: currColor = computed(() => currRoute.params.key as keyof typeof colors);
-const {
+ref: ({
 	customColors,
 	customShadesInfos,
 	addCustomShade,
 	editShadeFromColor,
-} = useCustomColors();
+} = useCustomColors());
 ref: currShades = computed(
 	() =>
 		colors[currColor] ??
-		(customColors.value[currColor] as Record<string | number, string>)
+		(customColors[currColor] as Record<string | number, string>)
 );
 
 ref: customShades = computed(() =>
-	customShadesInfos.value.filter(({ colorName }) => colorName === currColor)
+	customShadesInfos.filter(({ colorName }) => colorName === currColor)
 );
 </script>
 <style scoped>

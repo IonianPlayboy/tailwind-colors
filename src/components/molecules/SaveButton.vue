@@ -1,9 +1,8 @@
 <template>
 	<icon-button
-		:curr-title="'Copy the current color hexcode'"
-		:curr-icon="'copy'"
+		:curr-title="'Save this shade to use it for a custom theme'"
+		:curr-icon="'save'"
 		v-bind="{ hexCode, shadeNumber }"
-		@click="copyCurrValue(hexCode, shadeNumber)"
 	/>
 </template>
 
@@ -12,7 +11,6 @@ import { defineProps } from "@vue/runtime-core";
 </script>
 <script setup lang="ts">
 import IconButton from "@/components/atoms/IconButton.vue";
-import { copyCurrValue } from "@/utils";
 
 const props = defineProps<{
 	hexCode: string;

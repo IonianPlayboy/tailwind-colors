@@ -48,7 +48,7 @@ const props = defineProps<{
 	shadeNumber: number;
 }>();
 
-const { customColors } = useCustomColors();
+ref: ({ customColors } = useCustomColors());
 
-ref: currShadesList = computed(() => customColors.value[props.colorName]);
+ref: currShadesList = computed(() => customColors[props.colorName]);
 </script>

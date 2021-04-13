@@ -16,13 +16,15 @@
 		:type="standalone ? 'text' : 'number'"
 		:hex-code="customHexCode ?? baseHexCode ?? ''"
 		:shade-number="currShade ?? shadeNumber ?? 0"
-		@buttonClicked="shadeWasValidated()"
+		@click="shadeWasValidated()"
 	/>
 	<shade-item
 		v-if="shouldShowColorItem"
 		editable
+		:color-name="colorName"
 		:hex-code="standalone ? customHexCode : baseHexCode"
 		:shade-number="standalone ? currShade : shadeNumber"
+		:hide-color-name="hideColorName"
 		@shadeEdited="state = 'choosing'"
 	/>
 </template>
@@ -48,6 +50,7 @@ const props = defineProps<{
 	baseHexCode?: string;
 	noStartButton?: boolean;
 	standalone?: boolean;
+	hideColorName?: booolean;
 }>();
 ref: state = "inactive" as "inactive" | "choosing" | "done";
 ref: currInput = "";

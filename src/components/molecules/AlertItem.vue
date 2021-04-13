@@ -16,16 +16,6 @@
 				class="transition-colors fill-current text-warm-gray-200 hover:text-warm-gray-50"
 			/>
 		</button>
-
-		<!-- <button class="absolute top-0.5 right-2" @click="alertWasDismissed()">
-			X
-		</button> -->
-		<!-- <cross-button
-			hex-code="#000"
-			:shade-number="900"
-			class="top-0.5 right-2"
-			@buttonClicked="alertWasDismissed()"
-		/> -->
 	</div>
 </template>
 
@@ -36,7 +26,6 @@ import { defineEmit } from "@vue/runtime-core";
 
 const emit = defineEmit<(event: "alertDismissed") => void>();
 const alertWasDismissed = () => emit("alertDismissed");
-
 ref: currTimeout = undefined as undefined | number;
 
 const startTimeout = () => {

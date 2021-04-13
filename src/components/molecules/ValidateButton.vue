@@ -5,7 +5,6 @@
 		v-bind="{ hexCode, shadeNumber }"
 		thin-border
 		big
-		@buttonClicked="$emit('buttonClicked')"
 	/>
 </template>
 

@@ -56,18 +56,10 @@
 			<template
 				#default="{ currKey, currValue: { shadeNumber, hexCode } }"
 			>
-				<custom-color-link
+				<color-item
 					:color-name="currKey"
-					:hex-code="hexCode"
 					:shade-number="Number(shadeNumber)"
-				/>
-				<icon-button
-					class="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4"
-					:curr-title="'Delete the custom color'"
-					:curr-icon="'cross'"
-					v-bind="{ shadeNumber, hexCode }"
-					extra-thin-border
-					@click="removeCustomColor(currKey)"
+					:hex-code="hexCode"
 				/>
 			</template>
 		</list-display>
@@ -83,7 +75,7 @@ import ListDisplay from "@/components/molecules/ListDisplay.vue";
 import ShadeItem from "@/components/organisms/ShadeItem.vue";
 import CustomShade from "@/components/organisms/CustomShade.vue";
 import AddCustomColor from "@/components/organisms/AddCustomColor.vue";
-import CustomColorLink from "@/components/organisms/CustomColorLink.vue";
+import ColorItem from "@/components/organisms/ColorItem.vue";
 import IconButton from "@/components/atoms/IconButton.vue";
 
 import { useCustomColors } from "@/hooks";
@@ -94,7 +86,6 @@ const {
 	addCustomShade,
 	removeShadeFromColor,
 	addCustomColor,
-	removeCustomColor,
 } = useCustomColors();
 </script>
 <style scoped>

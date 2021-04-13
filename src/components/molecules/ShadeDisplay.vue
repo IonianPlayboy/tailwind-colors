@@ -13,7 +13,8 @@
 				'text-warm-gray-800': shadeNumber < 400,
 			}"
 		>
-			{{ colorName ? `${colorName}-` : "" }}{{ shadeNumber }}
+			{{ colorName && !hideColorName ? `${colorName}-` : ""
+			}}{{ shadeNumber }}
 		</strong>
 		<span
 			class="text-base md:text-2xl sm:text-xl"
@@ -37,5 +38,6 @@ const props = defineProps<{
 	colorName?: string;
 	hexCode: string;
 	shadeNumber: number;
+	hideColorName?: boolean;
 }>();
 </script>
