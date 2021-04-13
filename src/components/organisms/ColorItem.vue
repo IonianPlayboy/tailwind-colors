@@ -36,7 +36,7 @@ const props = defineProps<{
 	hexCode: string;
 	noSave?: boolean;
 }>();
-const { addedColorsNames, removeCustomColor } = useCustomColors();
+ref: ({ addedColorsNames, removeCustomColor } = useCustomColors());
 const { addColorToTheme } = useCustomThemes();
 const { addAlertToList } = useAlerts();
 
@@ -54,6 +54,6 @@ const saveColor = ({
 		hexCode: hexCode,
 		shadeNumber: shadeNumber,
 	});
-	addColorToTheme({ ...addedColorsNames.value[colorName], colorName });
+	addColorToTheme({ ...addedColorsNames[colorName], colorName });
 };
 </script>

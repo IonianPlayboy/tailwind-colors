@@ -57,7 +57,7 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 
-const { customThemes } = useCustomThemes();
+ref: ({ customThemes } = useCustomThemes());
 
-ref: currTheme = computed(() => customThemes.value[route.params.key as string]);
+ref: currTheme = computed(() => customThemes[route.params.key as string]);
 </script>
