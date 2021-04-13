@@ -34,6 +34,7 @@
 					:base-hex-code="hexCode"
 					:shade-number="shadeNumber"
 					:shades-list="currShades"
+					hide-color-name
 					@shadeValidated="editShadeFromColor($event)"
 				/>
 			</template>
