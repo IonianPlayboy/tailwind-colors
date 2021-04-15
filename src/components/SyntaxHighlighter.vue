@@ -1,26 +1,16 @@
 <template>
-	<pre ref="codeContainer" class="match-braces"><code
-			class="inline-color"
-			:class="`language-${language}`"
-			v-html="formattedCode"
-		/></pre>
+	<pre :class="`language-${language}`"><code><span
+		v-for="(token, i) in tokenizedCode"
+		:key="getCurrKey(token, i)"
+		:class="getCurrClass(token)">{{getCurrContent(token)}}</span></code></pre>
 </template>
 
 <script lang="ts">
-import { defineProps, onMounted } from "@vue/runtime-core";
+import { computed, defineProps } from "@vue/runtime-core";
 import Prism from "prismjs";
 import "prismjs/components/prism-javascript";
 import "prismjs/components/prism-css";
 import "prismjs/themes/prism-tomorrow.css";
-import "prismjs/plugins/toolbar/prism-toolbar";
-import "prismjs/plugins/toolbar/prism-toolbar.css";
-import "prismjs/plugins/show-language/prism-show-language";
-import "prismjs/plugins/inline-color/prism-inline-color";
-import "prismjs/plugins/inline-color/prism-inline-color.css";
-import "prismjs/plugins/match-braces/prism-match-braces";
-import "prismjs/plugins/match-braces/prism-match-braces.css";
-
-import { watch, watchEffect } from "vue";
 </script>
 <script setup lang="ts">
 const props = defineProps<{
@@ -28,42 +18,14 @@ const props = defineProps<{
 	code: string;
 }>();
 
-ref: codeContainer = null as null | ParentNode;
-ref: isMounted = true;
-ref: formattedCode = "";
-ref: tokenizedCode = [] as Array<unknown>;
-
-const formatCode = () => {
-	if (!codeContainer) return;
-	// Prism.highlightAllUnder(codeContainer);
-	// console.log(Object.keys(Prism.plugins));
-	// const grammar = Prism.languages[props.language];
-	// Prism.hooks.run("before-highlight", { grammar });
-	console.log(Object.keys(Prism.plugins));
-	formattedCode = Prism.highlight(
-		props.code,
-		Prism.languages[props.language],
-		props.language
-	);
-	tokenizedCode = Prism.tokenize(props.code, Prism.languages[props.language]);
-};
-
-onMounted(() => {
-	isMounted = true;
-	formatCode();
-});
-watch(
-	() => props.code,
-	() => {
-		if (!isMounted) return;
-		formatCode();
-	}
+ref: tokenizedCode = computed(() =>
+	Prism.tokenize(props.code, Prism.languages[props.language])
 );
 
-watchEffect(() => console.log(tokenizedCode));
+const getCurrKey = (token: typeof tokenizedCode[number], currIndex: number) =>
+	`${typeof token === "string" ? token : token.content}${currIndex}`;
+const getCurrClass = (token: typeof tokenizedCode[number]) =>
+	typeof token === "string" ? "token" : `token ${token.type}`;
+const getCurrContent = (token: typeof tokenizedCode[number]) =>
+	typeof token === "string" ? token : token.content;
 </script>
-<style>
-.toolbar {
-	@apply font-mono;
-}
-</style>

@@ -58,7 +58,7 @@ import ShadeItem from "@/components/organisms/ShadeItem.vue";
 import ColorItem from "@/components/organisms/ColorItem.vue";
 import SyntaxHighlighter from "@/components/SyntaxHighlighter.vue";
 import { useCustomThemes } from "@/hooks/customThemes";
-import { computed, watchEffect } from "@vue/runtime-core";
+import { computed } from "@vue/runtime-core";
 import { useRoute } from "vue-router";
 import { useCustomColors } from "@/hooks";
 
@@ -127,25 +127,21 @@ ref: customCSSVarsConfig = computed(() => ({
 	},
 }));
 
-// ref: customTailwindString = computed(
-// 	() =>
-// 		`module.exports = ${JSON.stringify(customTailwindConfig)
-// 			.replace(/(")([a-z\d]+)("):/g, "$2:")
-// 			.replace(/:/g, ": ")}`
-// );
-
 ref: customTailwindString = computed(
 	() =>
 		`module.exports = ${JSON.stringify(customTailwindConfig)
-			.replace(/(")([a-z\d]+)("):/g, "$2:")
+			.replace(/(")([A-Za-z\d]+)("):/g, "$2:")
 			.replace(/\{/g, "{\n")
 			.replace(/\}/g, "\n}")
 			.replace(/,/g, ",\n")
 			.replace(/:/g, " : ")}`
 );
+
 ref: customCSSVarsString = computed(
 	() => `${JSON.stringify(customCSSVarsConfig)
-		.replace(/(")([-a-z\d]+)("):/g, "$2:")
+		.replace(/[A-Z]/g, (match) => match.toLowerCase())
+		.replace(/([a-z]) ([a-z])/g, "$1-$2")
+		.replace(/(")([-A-Za-z\d]+)("):/g, "$2:")
 		.replace(/.$/, "")
 		.replace(/^./, "")
 		.replace(/\{/g, "{\n")
@@ -157,31 +153,22 @@ ref: customCSSVarsString = computed(
 
 const formatStringWithTabs = (baseString: string) => {
 	const { finalString } = (baseString.split("\n") ?? [""]).reduce(
-		({ finalString, indentationLevel }, line) => {
+		({ finalString, indentationLevel }, line, i, array) => {
 			const formattedLine = `${"\t".repeat(
 				Math.max(indentationLevel - (line.includes("}") ? 1 : 0), 0)
-			)}${line}\n`;
+			)}${line}`;
 			const nextIndentationLevel = line.includes("{")
 				? indentationLevel + 1
 				: line.includes("}")
 				? Math.max(indentationLevel - 1, 0)
 				: indentationLevel;
-			// console.log(formattedLine, indentationLevel, nextIndentationLevel);
 			return {
-				finalString: `${finalString}${formattedLine}`,
+				finalString: [...finalString, formattedLine],
 				indentationLevel: nextIndentationLevel,
 			};
 		},
-		{ finalString: "", indentationLevel: 0 }
+		{ finalString: [] as Array<string>, indentationLevel: 0 }
 	);
-	return finalString;
+	return finalString.join("\n");
 };
-
-//
-// 		.replace(/:/g, ":\n\t")
-// 		.
-// watchEffect(() => {
-// 	console.log(formatStringWithTabs(customTailwindString));
-// 	console.log(formatStringWithTabs(customCSSVarsString));
-// });
 </script>
