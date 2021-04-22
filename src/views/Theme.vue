@@ -7,15 +7,9 @@
 		<router-link class="inline-block mt-4 text-xl text-warm-gray-100" to="/"
 			>&lt; Go back</router-link
 		>
-		<syntax-highlighter
-			:code="formatStringWithTabs(customTailwindString)"
-			language="javascript"
-			class="mt-8"
-		/>
-		<syntax-highlighter
-			:code="formatStringWithTabs(customCSSVarsString)"
-			language="css"
-			class="mt-8"
+		<display-configs
+			:js-code="formatStringWithTabs(customTailwindString)"
+			:css-code="formatStringWithTabs(customCSSVarsString)"
 		/>
 		<h2 class="mt-8 text-xl font-body text-warm-gray-300 md:text-2xl">
 			Here are the theme colors :
@@ -57,6 +51,7 @@ import ListDisplay from "@/components/molecules/ListDisplay.vue";
 import ShadeItem from "@/components/organisms/ShadeItem.vue";
 import ColorItem from "@/components/organisms/ColorItem.vue";
 import SyntaxHighlighter from "@/components/SyntaxHighlighter.vue";
+import DisplayConfigs from "@/components/DisplayConfigs.vue";
 import { useCustomThemes } from "@/hooks/customThemes";
 import { computed } from "@vue/runtime-core";
 import { useRoute } from "vue-router";
